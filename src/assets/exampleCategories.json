@@ -1,0 +1,21 @@
+{
+      "categories": [
+        {
+          "id": 1,
+          "name": "Nudeln"
+        },
+        {
+          "id": 2,
+          "name": "Gesund"
+        },
+        {
+          "id": 3,
+          "name": "Schnell"
+        },
+        {
+          "id": 4,
+          "name": "Vegetarisch"
+        }
+      ]
+    }
+    

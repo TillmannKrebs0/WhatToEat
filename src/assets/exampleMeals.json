@@ -1,0 +1,58 @@
+{
+      "meals": [
+        {
+          "id": 1,
+          "title": "Spaghetti Carbonara",
+          "preparationTime": 20,
+          "ingredients": [
+            "Spaghetti",
+            "Eier",
+            "Speck",
+            "Parmesan",
+            "Pfeffer"
+          ],
+          "categories": ["Nudeln", "Schnell"]
+        },
+        {
+          "id": 2,
+          "title": "Gemüse-Curry",
+          "preparationTime": 30,
+          "ingredients": [],
+          "categories": []
+        },
+        {
+          "id": 3,
+          "title": "Caesar Salad",
+          "preparationTime": -1,
+          "ingredients": [
+            "Römersalat",
+            "Hähnchenbrust",
+            "Croutons",
+            "Parmesan",
+            "Caesar-Dressing"
+          ],
+          "categories": ["Gesund", "Schnell"]
+        },
+        {
+          "id": 4,
+          "title": "Vegetarische Lasagne",
+          "preparationTime": -1,
+          "ingredients": [],
+          "categories": []
+        },
+        {
+          "id": 5,
+          "title": "Linsensuppe",
+          "preparationTime": 35,
+          "ingredients": [
+            "Linsen",
+            "Karotten",
+            "Zwiebeln",
+            "Knoblauch",
+            "Gemüsebrühe"
+          ],
+          "categories": ["Gesund", "Vegetarisch"]
+        }
+      ]
+    }
+    
