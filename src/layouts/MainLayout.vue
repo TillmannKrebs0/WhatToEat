@@ -4,9 +4,6 @@
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
-          </q-avatar>
           {{ pageTitle }}
         </q-toolbar-title>
       </q-toolbar>
@@ -22,8 +19,8 @@
       </q-toolbar>
       <q-tabs>
         <q-route-tab to="/overview" label="Übersicht" />
-        <q-route-tab to="/addMeal" label="Page Two" />
-        <q-route-tab to="/selectMeal" label="Page Three" />
+        <q-route-tab to="/addMeal" label="Hinzufügen" />
+        <q-route-tab to="/selectMeal" label="Auswählen" />
       </q-tabs>
     </q-footer>
 
@@ -38,8 +35,8 @@ import { useRoute } from 'vue-router';
 const routeTitles = {
   '/': 'Übersicht',
   '/overview': 'Übersicht',
-  '/addMeal': 'Add Meal',
-  '/selectMeal': 'Select Meal',
+  '/addMeal': 'Hinzufügen',
+  '/selectMeal': 'Auswählen',
 };
 
 const route = useRoute();
