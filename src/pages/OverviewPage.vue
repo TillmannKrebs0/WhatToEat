@@ -8,6 +8,13 @@
       v-model:categories="selectedCategories"
     />
   </div>
+  <div class="content" id="mealList">
+    <MealList
+      :meals="meals"
+      :categories="selectedCategories"
+      :query="searchQuery"
+    />
+  </div>
   <q-btn
     label="Top Button"
     color="primary"
@@ -18,21 +25,21 @@
 
 <script setup>
 import { ref } from "vue";
-import SearchBar from "../components/overviewComponents/Searchbar.vue"; 
+import SearchBar from "../components/overviewComponents/SearchBar.vue";
 import CategoryButton from "../components/overviewComponents/CategoryButton.vue";
-import MealCard from "src/components/overviewComponents/MealCard.vue";
 import MealList from "../components/overviewComponents/MealList.vue";
 import exampleCategories from "src/assets/exampleCategories.json";
+import exampleMeals from "src/assets/exampleMeals.json";
 
 const categories = exampleCategories.categories.map((category) => category.name);
+const meals = ref(exampleMeals.meals);
 const searchQuery = ref("");
 const selectedCategories = ref([]);
-const mealList = ref([]);
 
 const onTopButtonClick = () => {
   console.log("Search Query", searchQuery.value);
   console.log("CategoriesSelected", selectedCategories.value);
-  console.log("MealList", mealList.value);
+  console.log("MealList", meals.value);
 };
 </script>
 
