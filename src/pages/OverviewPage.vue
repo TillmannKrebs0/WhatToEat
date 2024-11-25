@@ -15,12 +15,6 @@
       :query="searchQuery"
     />
   </div>
-  <q-btn
-    label="Top Button"
-    color="primary"
-    class="overviewButton"
-    @click="onTopButtonClick"
-  />
 </template>
 
 <script setup>
@@ -35,12 +29,6 @@ const categories = exampleCategories.categories.map((category) => category.name)
 const meals = ref(exampleMeals.meals);
 const searchQuery = ref("");
 const selectedCategories = ref([]);
-
-const onTopButtonClick = () => {
-  console.log("Search Query", searchQuery.value);
-  console.log("CategoriesSelected", selectedCategories.value);
-  console.log("MealList", meals.value);
-};
 </script>
 
 <style scoped>
