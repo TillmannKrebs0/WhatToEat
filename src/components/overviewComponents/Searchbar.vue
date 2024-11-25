@@ -9,7 +9,7 @@
     class="q-mb-md"
   >
     <template v-slot:append>
-      <q-icon name="search" @click="onSearch" />  <!-- Klick auf das Icon löst die Suche aus -->
+      <q-icon name="search" @click="onSearch" />
     </template>
   </q-input>
 </template>
