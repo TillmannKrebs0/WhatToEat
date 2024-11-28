@@ -23,10 +23,10 @@
     <IngredientSelection v-model="ingredients" />
   </div>
   <q-btn
-    label="Top Button"
+    label="Gericht hinzufügen"
     color="primary"
     class="addMealButton"
-    @click="onTopButtonClick"
+    @click="submitMeal"
   />
 </template>
 
@@ -35,17 +35,38 @@ import { ref } from "vue";
 import CategorySelection from "../components/addMealComponents/CategorySelection.vue";
 import DurationSlider from "../components/addMealComponents/DurationSlider.vue";
 import IngredientSelection from "../components/addMealComponents/IngredientSelection.vue";
+import { Preferences } from "@capacitor/preferences";
 
 const text = ref("");
 const selectedCategories = ref([]);
 const duration = ref();
 const ingredients = ref([]);
 
-const onTopButtonClick = () => {
-  console.log("Name", text.value);
-  console.log("Kategorien", selectedCategories.value);
-  console.log("Dauer", duration.value);
-  console.log("Zutaten", ingredients.value);
+const submitMeal = async () => {
+
+  if (text.value === "") {
+    console.log("need to put in a title");
+    return;
+  }
+
+  const newMeal = {
+    title: text.value,
+    preperationTime: duration.value,
+    categories: selectedCategories.value,
+    ingredients: ingredients.value,
+  };
+
+  const { value } = await Preferences.get({ key: "meals" });
+  let mealsList = value ? JSON.parse(value) : [];
+
+  mealsList.push(newMeal);
+
+  await Preferences.set({
+    key: "meals",
+    value: JSON.stringify(mealsList),
+  });
+
+  console.log("Meal saved:", newMeal);
 };
 </script>
 
