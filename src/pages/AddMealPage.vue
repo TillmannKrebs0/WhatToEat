@@ -49,6 +49,11 @@ const submitMeal = async () => {
     return;
   }
 
+  if (selectedCategories.value.length === 0) {
+    console.log("need to put in a category");
+    return;
+  }
+
   const newMeal = {
     title: text.value,
     preperationTime: duration.value,
