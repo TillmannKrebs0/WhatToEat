@@ -20,6 +20,9 @@ const emit = defineEmits(["update:model-value"]);
 const multiple = ref(props.modelValue || []);
 const options = ref(categorieList.categories.map((category) => category.name));
 
+const onSelectionChange = (newValues) => {
+  emit("update:model-value", newValues); // Notify the parent
+};
 
 /*
 

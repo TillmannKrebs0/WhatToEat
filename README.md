@@ -22,3 +22,17 @@ quasar build
 
 ### Customize the configuration
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+
+### Doployment on Mobile
+1. Build the Project
+``` bash
+npm run build
+```
+
+2. add android dependencies
+```bash
+npx cap add android
+```
+
+3. Open the android folder in Android Studio
+4. 
