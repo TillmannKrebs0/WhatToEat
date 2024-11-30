@@ -29,10 +29,14 @@ See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-
 npm run build
 ```
 
-2. add android dependencies
+2. add android dependencies (first time only)
 ```bash
 npx cap add android
 ```
 
-3. Open the android folder in Android Studio
-4. 
+3. Update android files
+```bash
+npx cap sync
+```  
+
+4. Open the android folder in Android Studio and run on emulator or connect a device
