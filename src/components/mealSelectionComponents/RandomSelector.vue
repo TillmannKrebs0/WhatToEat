@@ -16,7 +16,6 @@
 import { computed, onMounted } from 'vue';
 import FortuneWheel from 'vue-fortune-wheel';
 import 'vue-fortune-wheel/style.css';
-import { Preferences } from '@capacitor/preferences';
 
 const props = defineProps<{
   meals: Array<{ title: string; categories: string[] }>;
@@ -71,10 +70,4 @@ const onRotateEnd = (prize) => {
   alert(`Gewonnen: ${prize.name}`);
 };
 
-onMounted(async () => {
-  const { value } = await Preferences.get({ key: 'meals' });
-  meals.values = value ? JSON.parse(value) : [];
-
-  console.log(meals);
-});
 </script>
