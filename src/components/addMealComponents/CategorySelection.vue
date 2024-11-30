@@ -8,6 +8,21 @@
     bg-color="white"
     @update:model-value="onSelectionChange"
   />
+</template>
+
+<script setup>
+import { ref } from "vue";
+import categorieList from "../../assets/exampleCategories.json";
+
+const props = defineProps(["modelValue"]);
+const emit = defineEmits(["update:model-value"]);
+
+const multiple = ref(props.modelValue || []);
+const options = ref(categorieList.categories.map((category) => category.name));
+
+
+/*
+
   <q-dialog v-model="isDialogOpen">
     <q-card>
       <q-card-section>
@@ -21,21 +36,14 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-</template>
 
-<script setup>
-import { ref } from "vue";
-import categorieList from "../../assets/exampleCategories.json";
 
-const props = defineProps(["modelValue"]);
-const emit = defineEmits(["update:model-value"]);
-
-const multiple = ref(props.modelValue || []);
-const options = ref(categorieList.categories.map((category) => category.name));
 options.value.push("new");
 
 const isDialogOpen = ref(false);
 const newCategory = ref("");
+
+
 
 const onSelectionChange = (newValues) => {
   if (newValues.includes("new")) {
@@ -67,5 +75,5 @@ const saveNewCategory = () => {
   }
 
   closeDialog();
-};
+};*/
 </script>

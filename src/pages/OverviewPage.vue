@@ -31,7 +31,6 @@ const searchQuery = ref("");
 const selectedCategories = ref([]);
 
 onMounted(async () => {
-
   const { value } = await Preferences.get({ key: "meals" });
   meals.value = value ? JSON.parse(value) : [];
 
