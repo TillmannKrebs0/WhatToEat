@@ -1,13 +1,13 @@
 <template>
   <q-input
     v-model="ingredientsInput"
-    label="Enter ingredients (comma-separated)"
+    label="merhrere Zutaten mit Komma trennen"
     outlined
     clearable
     @keyup.enter="addIngredients"
   />
   <q-btn
-    label="Add Ingredients"
+    label="Zutaten hinzufügen"
     color="primary"
     class="q-mt-md"
     @click="addIngredients"

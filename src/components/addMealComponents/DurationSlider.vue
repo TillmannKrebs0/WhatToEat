@@ -8,7 +8,7 @@
     :max="120"
     :step=10
     :markers="10"
-    @change="emitTime"
+    @update:model-value="emitTime"
   />
 </template>
 
