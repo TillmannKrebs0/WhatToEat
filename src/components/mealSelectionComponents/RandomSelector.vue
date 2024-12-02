@@ -6,6 +6,7 @@
       :verify="false"
       :canvas="canvasOptions"
       :prizes="prizes"
+      :duration="duration"
       @rotateStart="onRotateStart"
       @rotateEnd="onRotateEnd"
     />
@@ -20,25 +21,28 @@ import 'vue-fortune-wheel/style.css';
 const props = defineProps<{
   meals: Array<{ title: string; categories: string[] }>;
   categories: string[];
-  duration: number;
 }>();
 
-const { meals, categories, duration } = props;
+const { meals, categories } = props;
+
+const duration = 2500;
 
 const prizes = computed(() => {
   const filteredMeals = meals.filter((meal) =>
     categories.length > 0 ? categories.some((cat) => meal.categories.includes(cat)) : true
   );
 
+
   if (filteredMeals.length === 0) return []; 
 
-  const probability = calculateProbability(filteredMeals.length);
+  const probabilities = calculateProbability(filteredMeals.length);
 
   return filteredMeals.map((meal, index) => ({
+    id : index,
     name: meal.title,
     bgColor: getBgColor(index),
     color: '#000',
-    probability,
+    probability: probabilities[index],
   }));
 });
 
@@ -47,10 +51,20 @@ function getBgColor(index: number) {
   return colors[index % 4];
 }
 
+function calculateProbability(size: number): number[] {
+  if (size === 0) return [];
 
-function calculateProbability(size: number) {
-  if (size === 0) return 0;
-  return 100 / size;
+  const baseProbability = Math.floor(100 / size);
+  const probabilities = Array(size).fill(baseProbability);
+
+  const totalProbability = probabilities.reduce((sum, p) => sum + p, 0);
+  const remaining = 100 - totalProbability;
+
+  if (remaining > 0) {
+    probabilities[size - 1] += remaining;
+  }
+
+  return probabilities;
 }
 
 const canvasOptions = {
