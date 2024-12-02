@@ -5,7 +5,9 @@
     markers
     snap
     :min="0"
-    :max="10"
+    :max="120"
+    :step=10
+    :markers="10"
     @change="emitTime"
   />
 </template>
