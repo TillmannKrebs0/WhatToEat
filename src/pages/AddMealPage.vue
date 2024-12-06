@@ -64,15 +64,17 @@ const submitMeal = async () => {
     return;
   }
 
+  const { value } = await Preferences.get({ key: "meals" }); 
+  const mealsList = value ? JSON.parse(value) : [];
+  
+  const maxId = mealsList.reduce((max, meal) => (meal.id > max ? meal.id : max), 0);
   const newMeal = {
+    id: maxId + 1,
     title: text.value,
     preperationTime: duration.value,
     categories: selectedCategories.value,
     ingredients: ingredients.value,
   };
-
-  const { value } = await Preferences.get({ key: "meals" });
-  let mealsList = value ? JSON.parse(value) : [];
 
   mealsList.push(newMeal);
 
