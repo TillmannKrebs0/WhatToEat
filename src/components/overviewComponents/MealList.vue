@@ -1,13 +1,13 @@
 <template>
-    <div class="meal-list">
-      <MealCard 
-        v-for="meal in filteredMeals" 
-        :key="meal.id" 
-        :meal="meal"
-        @updateMeal="updateMeal"
-        @removeMeal="removeMeal"
-      />
-    </div>
+  <div class="meal-list">
+    <MealCard 
+      v-for="meal in filteredMeals" 
+      :key="meal.id" 
+      :meal="meal"
+      @updateMeal="updateMeal"
+      @removeMeal="removeMeal"
+    />
+  </div>
 </template>
   
 <script setup>
@@ -29,29 +29,19 @@
     });
   });
 
-  const removeMeal = (id) => {
-    const mealIndex = props.meals.findIndex(meal => meal.id === id);
-    
-    if (mealIndex !== -1) {
-      props.meals.splice(mealIndex, 1);  
-      saveMealsToPreferences(props.meals); 
-    }
+  const removeMeal = async (id) => {
+    const updatedMeals = props.meals.filter(meal => meal.id !== id);
+    await saveMealsToPreferences(updatedMeals);
   };
 
-  const updateMeal = (updatedMeal) => {
-    const mealIndex = props.meals.findIndex(meal => meal.id === updatedMeal.id);
-    
-    if (mealIndex !== -1) {
-      props.meals[mealIndex] = updatedMeal;
-      saveMealsToPreferences(props.meals);
-    }
+  const updateMeal = async (updatedMeal) => {
+    const updatedMeals = props.meals.map(meal => meal.id === updatedMeal.id ? updatedMeal : meal);
+    await saveMealsToPreferences(updatedMeals);
   };
 
   const saveMealsToPreferences = async (meals) => {
     await Preferences.set({ key: "meals", value: JSON.stringify(meals) });
   };
-
-
 </script>
   
 <style scoped>
@@ -59,4 +49,4 @@
     display: flex;
     flex-direction: column;
   }
-</style>  
+</style>

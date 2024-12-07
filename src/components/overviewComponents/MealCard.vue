@@ -88,13 +88,25 @@
   const emit = defineEmits(['removeMeal', 'updateMeal']);
   
   const isExpanded = ref(false);
-  const isFavorite = ref(false);
+  const isFavorite = ref(props.meal.categories.includes('Favoriten'));
   const editPopupVisible = ref(false);
 
   const editedMeal = ref({ ...props.meal });
 
   const toggleFavorite = () => {
     isFavorite.value = !isFavorite.value;
+    if (isFavorite.value) {
+      if (!editedMeal.value.categories.includes('Favoriten')) {
+        editedMeal.value.categories.push('Favoriten');
+      }
+    } else {
+      const index = editedMeal.value.categories.indexOf('Favoriten');
+      if (index !== -1) {
+        editedMeal.value.categories.splice(index, 1);
+      }
+    
+      emit('updateMeal', editedMeal.value);
+    }
   };
 
   const toggleDetails = () => {
