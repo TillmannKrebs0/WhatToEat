@@ -41,7 +41,10 @@
 
   const saveMealsToPreferences = async (meals) => {
     await Preferences.set({ key: "meals", value: JSON.stringify(meals) });
+    window.location.reload();
   };
+
+
 </script>
   
 <style scoped>

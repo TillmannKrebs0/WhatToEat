@@ -125,6 +125,7 @@
 
   const closeEditPopup = () => {
     editPopupVisible.value = false;
+    window.location.reload();
   };
 
   const saveChanges = () => {
