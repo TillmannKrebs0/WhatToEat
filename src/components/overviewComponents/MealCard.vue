@@ -22,7 +22,7 @@
         />
       </div>
       <div v-if="isExpanded" class="meal-details">
-        <p v-if="meal.preparationTime > 0"><strong>Dauer:</strong> {{ meal.preparationTime }} min.</p>
+        <p v-if="meal.preparationTime"><strong>Dauer:</strong> {{ meal.preparationTime }} min.</p>
         <p v-if="meal.ingredients.length > 0"><strong>Zutaten:</strong></p>
         <ul>
           <li v-for="ingredient in meal.ingredients" :key="ingredient">{{ ingredient }}</li>
@@ -110,6 +110,7 @@
   };
 
   const toggleDetails = () => {
+    console.log(props.meal.preparationTime);
     isExpanded.value = !isExpanded.value;
   };
 

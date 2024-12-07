@@ -71,7 +71,7 @@ const submitMeal = async () => {
   const newMeal = {
     id: maxId + 1,
     title: text.value,
-    preperationTime: duration.value,
+    preparationTime: duration.value,
     categories: selectedCategories.value,
     ingredients: ingredients.value,
   };
