@@ -21,7 +21,6 @@
       <p v-if="duration > 0">{{ duration }} Minuten</p>
       <p v-else>-</p>
     </div> 
-
     <DurationSlider v-model="duration" class="duration-slider"/>
   </div>
   <div class="content" id="ingredientSelection">
