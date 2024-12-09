@@ -76,7 +76,7 @@
   
 <script setup>
   import { ref } from 'vue';
-
+  import { Preferences } from "@capacitor/preferences";
   import { QDialog, QCard, QCardSection, QCardActions, QIcon, QBtn, QInput, QSelect } from 'quasar';
   import CategorySelection from '../addMealComponents/CategorySelection.vue';
   import IngredientSelection from '../addMealComponents/IngredientSelection.vue';
@@ -93,8 +93,9 @@
 
   const editedMeal = ref({ ...props.meal });
 
-  const toggleFavorite = () => {
+  const toggleFavorite = async () => {
     isFavorite.value = !isFavorite.value;
+
     if (isFavorite.value) {
       if (!editedMeal.value.categories.includes('Favoriten')) {
         editedMeal.value.categories.push('Favoriten');
@@ -104,10 +105,24 @@
       if (index !== -1) {
         editedMeal.value.categories.splice(index, 1);
       }
-    
-      emit('updateMeal', editedMeal.value);
     }
+
+    const { value } = await Preferences.get({ key: "meals" });
+    const mealsList = value ? JSON.parse(value) : [];
+
+    const mealIndex = mealsList.findIndex(meal => meal.id === editedMeal.value.id);
+    if (mealIndex !== -1) {
+      mealsList[mealIndex] = { ...editedMeal.value };
+    }
+
+    await Preferences.set({
+      key: "meals",
+      value: JSON.stringify(mealsList),
+    });
+
+    console.log("Meal updated:", editedMeal.value);
   };
+
 
   const toggleDetails = () => {
     console.log(props.meal.preparationTime);
