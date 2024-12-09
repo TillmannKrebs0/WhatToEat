@@ -1,33 +1,40 @@
 <template>
   <div class="content" id="titleSelection">
     <div class="row">
-      <h4 class="label">Name</h4>
+      <h5 class="label">Name:</h5>
       <q-input
         filled
         v-model="text"
         :style="{ minWidth: '60%' }"
+        class="input-box"
         bg-color="white"
       />
     </div>
   </div>
   <div class="content" id="categorySelection">
-    <h4>Kategorien</h4>
+    <h5>Kategorien:</h5>
     <CategorySelection v-model="selectedCategories" />
   </div>
   <div class="content" id="durationSelection">
-    <h4>Dauer</h4>
-    <DurationSlider v-model="duration" />
+    <div class="row">
+      <h5>Zubereitungszeit:</h5>
+      <p v-if="duration > 0">{{ duration }} Minuten</p>
+      <p v-else>-</p>
+    </div> 
+
+    <DurationSlider v-model="duration" class="duration-slider"/>
   </div>
   <div class="content" id="ingredientSelection">
-    <h4>Zutaten</h4>
+    <h5>Zutaten:</h5>
     <IngredientSelection v-model="ingredients" />
   </div>
-  <q-btn
-    label="Gericht hinzufügen"
-    color="primary"
-    class="addMealButton"
-    @click="submitMeal"
-  />
+  <div class="addMealButton">
+    <q-btn
+      label="Gericht hinzufügen"
+      color="primary"
+      @click="submitMeal"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -39,18 +46,21 @@ import { Preferences } from "@capacitor/preferences";
 
 const text = ref("");
 const selectedCategories = ref([]);
-const duration = ref();
+const duration = ref(0);
 const ingredients = ref([]);
 
 const submitMeal = async () => {
 
   if (text.value === "") {
     console.log("need to put in a title");
+    alert("Bitte geben Sie einen Namen für das Gericht ein");
     return;
   }
 
   if (selectedCategories.value.length === 0) {
     console.log("need to put in a category");
+    alert("Bitte geben Sie mindestens eine Kategorie an");
+
     return;
   }
 
@@ -72,15 +82,18 @@ const submitMeal = async () => {
   });
 
   console.log("Meal saved:", newMeal);
+  alert("Das Gericht wurde erfolgreich gespeichert");
+
+  window.location.reload();
 };
 </script>
 
 <style scoped>
 .content {
   background-color: lightgray;
-  margin: 30px;
-  border-radius: 10px;
-  padding: 20px;
+  margin: 2%;
+  border-radius: 15px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
 }
@@ -88,10 +101,35 @@ const submitMeal = async () => {
 .row {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
 }
 
 .label {
   margin: 0;
+}
+
+h5 {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.duration-slider {
+  width: 99%;
+}
+
+#ingredientSelection {
+  margin-bottom: 50px;
+}
+.addMealButton {
+  position: fixed; /* Fixes the button at the bottom of the screen */
+  bottom: 100px; /* Distance from the bottom */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Fine-tuning for centering */
+  z-index: 1000; /* Ensure the button is on top of other elements */
+}
+
+:deep(.input-box .q-field__control),
+:deep(.input-box .q-field__marginal) {
+  height: 32px;
+  font-size: 16px;
 }
 </style>

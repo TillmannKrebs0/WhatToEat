@@ -4,9 +4,10 @@
     v-touch-swipe.mouse.right="handleSwipeRight"
     v-touch-swipe.mouse.left="handleSwipeLeft"
   >
-    <q-header elevated class="bg-primary text-white" height-hint="98">
-      <q-toolbar>
-        <q-toolbar-title>
+    <!-- Header with increased height -->
+    <q-header elevated class="bg-primary text-white" style="height: 10%;">
+      <q-toolbar class="q-pt-lg q-pb-lg"> <!-- Adds padding for larger title -->
+        <q-toolbar-title class="text-h5"> <!-- Increases font size for title -->
           {{ pageTitle }}
         </q-toolbar-title>
       </q-toolbar>
@@ -16,31 +17,33 @@
       <router-view />
     </q-page-container>
 
-    <q-footer elevated class="bg-grey-8 text-white">
-      <q-toolbar>
-      </q-toolbar>
-      <q-tabs>
-        <q-route-tab to="/" label="Übersicht" />
-        <q-route-tab to="/addMeal" label="Hinzufügen" />
-        <q-route-tab to="/selectMeal" label="Auswählen" />
+    <q-footer elevated class="bg-grey-8 text-white" style="height: 75px;">
+      <q-tabs class="q-mt-none"> <!-- Removes margin on tabs -->
+        <q-route-tab to="/" label="Übersicht" icon="home" />
+        <q-route-tab to="/addMeal" label="Hinzufügen" icon="add_circle" />
+        <q-route-tab to="/selectMeal" label="Auswählen" icon="casino">
+        </q-route-tab>
       </q-tabs>
     </q-footer>
   </q-layout>
 </template>
+
+
 <script setup>
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+// Titles for each route
 const routeTitles = {
-  '/': 'Übersicht',
-  '/addMeal': 'Hinzufügen',
-  '/selectMeal': 'Auswählen',
+  '/': 'Gerichte Übersicht',
+  '/addMeal': 'Gericht Hinzufügen',
+  '/selectMeal': 'Zufallsauswahl treffen',
 };
 
 const route = useRoute();
 const router = useRouter();
 
-const pageTitle = computed(() => routeTitles[route.path] || 'Default Title');
+const pageTitle = computed(() => (routeTitles[route.path] || 'Default Title'));
 
 // Swipe navigation logic
 const routes = ['/', '/addMeal', '/selectMeal'];
@@ -48,7 +51,7 @@ const navigate = (direction) => {
   const currentRoute = route.path;
   const currentIndex = routes.indexOf(currentRoute);
 
-  if (currentIndex === -1) return; 
+  if (currentIndex === -1) return;
 
   const nextIndex = currentIndex + direction;
 

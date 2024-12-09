@@ -5,8 +5,10 @@
     markers
     snap
     :min="0"
-    :max="10"
-    @change="emitTime"
+    :max="120"
+    :step=10
+    :markers="10"
+    @update:model-value="emitTime"
   />
 </template>
 
