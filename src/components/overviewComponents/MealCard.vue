@@ -3,10 +3,10 @@
       <div class="header">
         <q-icon>
           <template v-if="isFavorite">
-            <q-icon name="favorite" class="favorite-icon" @click="toggleFavorite" />
+            <q-icon name="star" class="favorite-icon fav-selected" @click="toggleFavorite" />
           </template>
           <template v-else>
-            <q-icon name="favorite_border" class="favorite-icon" @click="toggleFavorite" />
+            <q-icon name="star_border" class="favorite-icon" @click="toggleFavorite" />
           </template>
         </q-icon>
         <h3 @click="toggleDetails">{{ meal.title }}</h3>
@@ -178,7 +178,8 @@
     font-size: 1.5rem;
   }
 
-  .dialog {
-    width: 400px;
+  .favorite-icon.fav-selected {
+    color: #f1c40f;
   }
+
 </style>  
