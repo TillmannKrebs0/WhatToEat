@@ -1,5 +1,5 @@
 <template>
-  <div class="content" id="searchBar">
+  <div class="searchBar" id="searchBar">
     <SearchBar v-model:query="searchQuery" />
   </div>
   <div class="content" id="categoryButtons">
@@ -8,7 +8,7 @@
       v-model:categories="selectedCategories"
     />
   </div>
-  <div class="content" id="mealList">
+  <div class="mealList" id="mealList">
     <MealList
       :meals="meals"
       :categories="selectedCategories"
@@ -38,4 +38,35 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.content {
+  background-color: lightgray;
+  margin: 2%;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label {
+  margin: 0;
+}
+
+h5 {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.searchBar {
+  margin: 2%;
+}
+
+.mealList {
+  margin: 2%;
+}
 </style>

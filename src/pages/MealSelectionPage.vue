@@ -1,5 +1,5 @@
 <template>
-   <div class="content" id="categoryButtons">
+  <div class="content" id="categoryButtons">
     <CategoryButton
       :categories="categories"
       v-model:categories="selectedCategories"
@@ -10,14 +10,16 @@
       <h5>Zubereitungszeit:</h5>
       <p v-if="duration > 0">max. {{ duration }} Minuten</p>
       <p v-else>-</p>
-    </div> 
-    <DurationSlider v-model="duration" class="duration-slider"/>
+    </div>
+    <DurationSlider v-model="duration" class="duration-slider" />
   </div>
   <div class="content" id="randomSelector" v-if="loaded">
     <RandomSelector
       :meals="filteredMeals"
       :categories="selectedCategories"
       :duration="duration"
+      class="randomSelector"
+      @select="showMealDetails"
     />
   </div>
 </template>
@@ -36,23 +38,31 @@ const selectedCategories = ref([]);
 const duration = ref(0);
 let loaded = ref(false);
 
+const selectedMeal = ref({});
+const showModal = ref(false);
+
 const filteredMeals = computed(() => {
-  return meals.value.filter(meal => {
-    const matchesCategories = selectedCategories.value.length === 0 || 
-      meal.categories.some(category => selectedCategories.value.includes(category));
-    console.log(meal.title, meal.preparationTime);
-    const matchesDuration = duration.value === 0 || meal.preparationTime <= duration.value;
+  return meals.value.filter((meal) => {
+    const matchesCategories =
+      selectedCategories.value.length === 0 ||
+      meal.categories.some((category) =>
+        selectedCategories.value.includes(category)
+      );
+    const matchesDuration =
+      duration.value === 0 || meal.preparationTime <= duration.value;
     return matchesCategories && matchesDuration;
   });
 });
 
-console.log(filteredMeals.value);
+const showMealDetails = (meal) => {
+  selectedMeal.value = meal;
+  showModal.value = true;
+};
 
 onMounted(async () => {
   try {
     const { value } = await Preferences.get({ key: "meals" });
     meals.value = value ? JSON.parse(value) : [];
-    console.log(meals.value);
   } catch (error) {
     console.error("Failed to load meals:", error);
   } finally {
@@ -69,15 +79,12 @@ onMounted(async () => {
   padding: 15px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-}
-
-.label {
-  margin: 0;
 }
 
 h5 {
@@ -87,5 +94,9 @@ h5 {
 
 .duration-slider {
   width: 99%;
+}
+
+.randomSelector {
+  max-width: 100%;
 }
 </style>

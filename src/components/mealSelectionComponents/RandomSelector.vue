@@ -11,22 +11,52 @@
       @rotateStart="onRotateStart"
       @rotateEnd="onRotateEnd"
     />
+    <!-- Popup für Details des gewonnenen Gerichts -->
+    <div v-if="showpopup" class="popup-overlay">
+      <div class="popup">
+        <h3>Gewonnen: {{ selectedPrize?.name }}</h3>
+
+        <div v-if="selectedPrize">
+          <div v-if="selectedPrize.preparationTime">
+            <p><strong>Dauer:</strong> {{ selectedPrize.preparationTime }} min.</p>
+          </div>
+
+          <div v-if="selectedPrize.ingredients && selectedPrize.ingredients.length > 0">
+            <p><strong>Zutaten:</strong></p>
+            <ul>
+              <li v-for="ingredient in selectedPrize.ingredients" :key="ingredient">
+                {{ ingredient }}
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="selectedPrize.categories && selectedPrize.categories.length > 0">
+            <p><strong>Kategorien:</strong> {{ selectedPrize.categories.join(", ") }}</p>
+          </div>
+        </div>
+        
+        <button @click="closePopup" class="close-button bg-primary text-white">Schließen</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import FortuneWheel from "vue-fortune-wheel";
 import "vue-fortune-wheel/style.css";
 
 const props = defineProps<{
-  meals: Array<{ title: string; categories: string[] }>;
+  meals: Array<{ title: string; categories: string[]; ingredients: string[]; preparationTime: number }>;
   categories: string[];
 }>();
 
 const duration = 2500;
 
-// Dynamisch aktualisiertes Array für die Prämien des Glücksrads
+// Popup-Status und gewonnenes Gericht
+const showpopup = ref(false);
+const selectedPrize = ref<{ name: string; categories: string[]; ingredients: string[]; preparationTime: number } | null>(null);
+
 const prizes = computed(() => {
   const filteredMeals = props.meals.filter((meal) =>
     props.categories.length > 0
@@ -42,6 +72,9 @@ const prizes = computed(() => {
   return filteredMeals.map((meal, index) => ({
     id: index,
     name: meal.title,
+    categories: meal.categories,
+    ingredients: meal.ingredients, // Zutaten für das Popup
+    preparationTime: meal.preparationTime, // Zubereitungszeit für das Popup
     bgColor: getBgColor(index),
     color: "#000",
     probability: probabilities[index],
@@ -83,6 +116,55 @@ const onRotateStart = () => {
 };
 
 const onRotateEnd = (prize) => {
-  alert(`Gewonnen: ${prize.name}`);
+  selectedPrize.value = prize;
+  showpopup.value = true; // Popup anzeigen
+};
+
+const closePopup = () => {
+  showpopup.value = false; // Popup schließen
+  selectedPrize.value = null;
 };
 </script>
+
+<style scoped>
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+ul {
+  padding-left: 20px;
+  text-align: left;
+}
+
+ul li {
+  margin-bottom: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+</style>
