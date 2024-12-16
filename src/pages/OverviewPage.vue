@@ -39,7 +39,6 @@ onMounted(async () => {
 
 <style scoped>
 .content {
-  background-color: lightgray;
   margin: 2%;
   border-radius: 15px;
   padding: 15px;

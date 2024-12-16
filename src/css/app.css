@@ -1,1 +1,9 @@
 /* app global css */
+
+:root {
+  background-color: #EFEFEF;
+}
+
+.content {
+  background-color: white;
+}

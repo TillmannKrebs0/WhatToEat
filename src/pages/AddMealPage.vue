@@ -2,13 +2,12 @@
   <div class="content" id="titleSelection">
     <div class="row">
       <h5 class="label">Name:</h5>
-      <q-input
-        filled
+      <q-input 
+        outlined
         v-model="text"
-        :style="{ minWidth: '60%' }"
+        :style="{ minWidth: '60%', backgroundColor: '#f2f2f2' }"
         class="input-box"
-        bg-color="white"
-      />
+        />
     </div>
   </div>
   <div class="content" id="categorySelection">
@@ -27,7 +26,7 @@
     <h5>Zutaten:</h5>
     <IngredientSelection v-model="ingredients" />
   </div>
-  <div class="addMealButton">
+  <div class="content">
     <q-btn
       label="Gericht hinzufügen"
       color="primary"
@@ -91,7 +90,6 @@ const submitMeal = async () => {
 
 <style scoped>
 .content {
-  background-color: lightgray;
   margin: 2%;
   border-radius: 15px;
   padding: 15px;
@@ -117,9 +115,6 @@ h5 {
   width: 99%;
 }
 
-#ingredientSelection {
-  margin-bottom: 50px;
-}
 .addMealButton {
   position: fixed; /* Fixes the button at the bottom of the screen */
   bottom: 100px; /* Distance from the bottom */

@@ -1,7 +1,7 @@
 <template>
   <q-slider
     v-model="time"
-    color="green"
+    color=positive
     markers
     snap
     :min="0"

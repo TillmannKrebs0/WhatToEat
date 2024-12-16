@@ -4,7 +4,9 @@
     label="mehrere Zutaten mit Komma trennen"
     outlined
     clearable
+    :style="{ backgroundColor: '#f2f2f2' }"
     @keyup.enter="addIngredients"
+    dense
   />
   <q-btn
     label="Zutaten hinzufügen"

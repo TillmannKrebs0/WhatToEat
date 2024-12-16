@@ -4,9 +4,9 @@
     v-model="multiple"
     multiple
     :options="options"
-    :style="{ minWidth: '60%' }"
-    bg-color="white"
+    :style="{ minWidth: '60%', border: '1px solid lightgrey', borderRadius: '5px' }"
     @update:model-value="onSelectionChange"
+    dense
   />
 </template>
 
