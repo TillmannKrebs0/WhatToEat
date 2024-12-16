@@ -6,8 +6,6 @@
     <q-layout
       v-if="!showSplashScreen" 
       view="hHh lpR fFf"
-      v-touch-swipe.mouse.right="handleSwipeRight"
-      v-touch-swipe.mouse.left="handleSwipeLeft"
     >
       <q-header elevated class="bg-primary text-white" style="height: 13%">
         <q-toolbar class="q-pt-lg q-pb-lg">
@@ -57,26 +55,7 @@ const routeTitles = {
 const pageTitle = computed(() => routeTitles[route.path] || "Default Title");
 
 const routes = ["/", "/addMeal", "/selectMeal"];
-const navigate = (direction) => {
-  const currentRoute = route.path;
-  const currentIndex = routes.indexOf(currentRoute);
 
-  if (currentIndex === -1) return;
-
-  const nextIndex = currentIndex + direction;
-
-  if (nextIndex >= 0 && nextIndex < routes.length) {
-    router.push(routes[nextIndex]);
-  }
-};
-
-const handleSwipeRight = () => {
-  navigate(-1);
-};
-
-const handleSwipeLeft = () => {
-  navigate(1);
-};
 </script>
 
 <style scoped>

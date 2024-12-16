@@ -1,6 +1,6 @@
 # WhatToEat (whattoeatapp)
 
-A mobile app, that helpls you decide whats on the plate today!
+A mobile app, that helps you decide whats on the plate today!
 
 ## Install the dependencies
 ```bash
