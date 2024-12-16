@@ -33,3 +33,11 @@ const toggleCategory = (category) => {
   emit("update:categories", selected.value);
 };
 </script>
+
+<style scoped>
+button {
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}
+</style>

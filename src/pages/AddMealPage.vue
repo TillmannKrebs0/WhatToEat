@@ -21,7 +21,6 @@
       <p v-if="duration > 0">{{ duration }} Minuten</p>
       <p v-else>-</p>
     </div> 
-
     <DurationSlider v-model="duration" class="duration-slider"/>
   </div>
   <div class="content" id="ingredientSelection">
@@ -64,15 +63,17 @@ const submitMeal = async () => {
     return;
   }
 
+  const { value } = await Preferences.get({ key: "meals" }); 
+  const mealsList = value ? JSON.parse(value) : [];
+  
+  const maxId = mealsList.reduce((max, meal) => (meal.id > max ? meal.id : max), 0);
   const newMeal = {
+    id: maxId + 1,
     title: text.value,
-    preperationTime: duration.value,
+    preparationTime: duration.value,
     categories: selectedCategories.value,
     ingredients: ingredients.value,
   };
-
-  const { value } = await Preferences.get({ key: "meals" });
-  let mealsList = value ? JSON.parse(value) : [];
 
   mealsList.push(newMeal);
 

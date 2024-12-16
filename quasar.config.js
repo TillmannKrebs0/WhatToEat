@@ -84,7 +84,14 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {},
+      config: {
+        brand: {
+        primary: '#EA5C2B', // orange
+        secondary: '#FF7F3F', // light orange
+        accent: '#F6D860', // yellow
+        positive: '#95CD41', // green
+      }
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -97,7 +104,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [],
     },
 
     // animations: 'all', // --- includes all animations

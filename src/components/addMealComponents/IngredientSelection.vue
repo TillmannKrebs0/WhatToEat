@@ -1,7 +1,7 @@
 <template>
   <q-input
     v-model="ingredientsInput"
-    label="merhrere Zutaten mit Komma trennen"
+    label="mehrere Zutaten mit Komma trennen"
     outlined
     clearable
     @keyup.enter="addIngredients"
@@ -35,13 +35,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps(["modelValue"]);
 const emit = defineEmits(["update:model-value"]);
 
 const ingredientsInput = ref("");
-const ingredients = ref([]);
+const ingredients = ref(props.modelValue || []);
+
+watch(ingredients, (newValue) => {
+  emit("update:model-value", newValue);
+}, { deep: true });
 
 const addIngredients = () => {
   const newIngredients = ingredientsInput.value
@@ -50,12 +54,10 @@ const addIngredients = () => {
     .filter((item) => item);
   ingredients.value = [...ingredients.value, ...newIngredients];
   ingredientsInput.value = "";
-  emit("update:model-value", ingredients.value);
 };
 
 const removeIngredient = (index) => {
   ingredients.value.splice(index, 1);
-  emit("update:model-value", ingredients.value);
 };
 </script>
 

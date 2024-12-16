@@ -1,21 +1,26 @@
 <template>
-    <div class="meal-list">
-      <MealCard v-for="meal in filteredMeals" :key="meal.id" :meal="meal" />
-    </div>
+  <div class="meal-list">
+    <MealCard 
+      v-for="meal in filteredMeals" 
+      :key="meal.id" 
+      :meal="meal"
+      @updateMeal="updateMeal"
+      @removeMeal="removeMeal"
+    />
+  </div>
 </template>
   
 <script setup>
   import { computed } from "vue";
   import MealCard from "./MealCard.vue";
-  
-  // Receive meals and filter them by categories and query
+  import { Preferences } from "@capacitor/preferences";
+
   const props = defineProps({
     meals: Array,
     categories: Array,
     query: String
   });
-  
-  // Compute filtered meals based on search query and selected categories
+
   const filteredMeals = computed(() => {
     return props.meals.filter(meal => {
       const matchesQuery = meal.title.toLowerCase().includes(props.query.toLowerCase());
@@ -23,6 +28,23 @@
       return matchesQuery && matchesCategories;
     });
   });
+
+  const removeMeal = async (id) => {
+    const updatedMeals = props.meals.filter(meal => meal.id !== id);
+    await saveMealsToPreferences(updatedMeals);
+  };
+
+  const updateMeal = async (updatedMeal) => {
+    const updatedMeals = props.meals.map(meal => meal.id === updatedMeal.id ? updatedMeal : meal);
+    await saveMealsToPreferences(updatedMeals);
+  };
+
+  const saveMealsToPreferences = async (meals) => {
+    await Preferences.set({ key: "meals", value: JSON.stringify(meals) });
+    window.location.reload();
+  };
+
+
 </script>
   
 <style scoped>
@@ -30,4 +52,4 @@
     display: flex;
     flex-direction: column;
   }
-</style>  
+</style>

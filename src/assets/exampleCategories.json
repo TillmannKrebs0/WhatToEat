@@ -2,18 +2,22 @@
       "categories": [
         {
           "id": 1,
-          "name": "Nudeln"
+          "name": "Favoriten"
         },
         {
           "id": 2,
-          "name": "Gesund"
+          "name": "Nudeln"
         },
         {
           "id": 3,
-          "name": "Schnell"
+          "name": "Gesund"
         },
         {
           "id": 4,
+          "name": "Schnell"
+        },
+        {
+          "id": 5,
           "name": "Vegetarisch"
         }
       ]
