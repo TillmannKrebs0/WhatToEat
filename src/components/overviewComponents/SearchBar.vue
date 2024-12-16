@@ -1,18 +1,20 @@
 <template>
   <q-input
-    filled
+    rounded outlined
     v-model="searchQuery"
     placeholder="Suche"
     @input="onSearch"
     @keyup.enter="onSearch"
     clearable
-    class="q-mb-md"
+    class="q-mb-md input-box"
+    bg-color="white"
   >
-    <template v-slot:append>
-      <q-icon name="search" @click="onSearch" />
+    <template v-slot:prepend>
+      <q-icon name="search" @click="onSearch" color="black"/>
     </template>
   </q-input>
 </template>
+
 
 <script setup>
 import { ref } from "vue";
@@ -28,3 +30,9 @@ const onSearch = () => {
   emit("update:query", searchQuery.value);
 };
 </script>
+
+<style scoped>
+
+
+
+</style>

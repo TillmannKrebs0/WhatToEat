@@ -169,7 +169,7 @@ const saveChanges = () => {
 
 <style scoped>
 h3 {
-  width: 80%;
+  width: 55%;
   cursor: pointer;
 }
 
@@ -189,10 +189,13 @@ h3 {
 }
 
 .meal-card {
-  padding: 1rem;
+  padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  margin-bottom: 2%;
+
 }
 
 .meal-card h3 {
@@ -211,7 +214,11 @@ h3 {
   font-size: 1.5rem;
 }
 
+.favorite-icon {
+  margin-left: 25px;
+}
+
 .favorite-icon.fav-selected {
-  color: #f1c40f;
+  color: #F6D860;
 }
 </style>
