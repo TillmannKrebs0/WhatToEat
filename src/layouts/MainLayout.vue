@@ -4,12 +4,11 @@
     v-touch-swipe.mouse.right="handleSwipeRight"
     v-touch-swipe.mouse.left="handleSwipeLeft"
   >
-    <!-- Header with increased height -->
-    <q-header elevated class="bg-primary text-white" style="height: 10%;">
-      <q-toolbar class="q-pt-lg q-pb-lg"> <!-- Adds padding for larger title -->
-        <q-toolbar-title class="text-h5"> <!-- Increases font size for title -->
-          {{ pageTitle }}
-        </q-toolbar-title>
+<q-header elevated class="bg-primary text-white" style="height: 13%;">
+      <q-toolbar class="q-pt-lg q-pb-lg">
+        <div class="absolute-center text-center">
+          <h4>{{ pageTitle }}</h4>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -68,3 +67,10 @@ const handleSwipeLeft = () => {
   navigate(1);
 };
 </script>
+
+<style scoped>
+h4 {
+  margin-top: 15vh;
+  white-space: nowrap;
+}
+</style>
