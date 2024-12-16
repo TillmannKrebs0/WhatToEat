@@ -43,6 +43,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useQuasar } from 'quasar';
 import FortuneWheel from "vue-fortune-wheel";
 import "vue-fortune-wheel/style.css";
 
@@ -75,15 +76,18 @@ const prizes = computed(() => {
     categories: meal.categories,
     ingredients: meal.ingredients, // Zutaten für das Popup
     preparationTime: meal.preparationTime, // Zubereitungszeit für das Popup
-    bgColor: getBgColor(index),
+    bgColor: getBgColor(index, filteredMeals.length-1),
     color: "#000",
     probability: probabilities[index],
   }));
 });
 
-function getBgColor(index: number) {
-  const colors = ["#F6D6D6", "#F6F7C4", "#A1EEBD", "#A1EEBD"];
-  return colors[index % 4];
+function getBgColor(index: number, lastIndex: number) {
+  const colors = ["#FF7F3F", "#F6D860", "#95CD41", "#A1EEBD"];
+  if (index == lastIndex && lastIndex % 3 == 0) {
+    return colors[index % 3 + 1]
+  }
+  return colors[index % 3];
 }
 
 function calculateProbability(size: number): number[] {
@@ -108,7 +112,7 @@ const canvasOptions = {
   borderWidth: 5,
   fontSize: 18,
   btnWidth: 100,
-  btnText: "Drehen!",
+  btnText: "Los!",
 };
 
 const onRotateStart = () => {

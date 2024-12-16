@@ -1,13 +1,19 @@
 <template>
-  <div>
-    <q-btn
-      v-for="category in categories"
-      :key="category"
-      :label="category"
-      @click="toggleCategory(category)"
-      :class="selected.includes(category) ? 'bg-primary text-white' : 'bg-white text-black'"
-    />
-  </div>
+  <q-scroll-area :visible="false" style="height: 50px">
+    <div class="row no-wrap">
+      <q-btn
+        v-for="category in categories"
+        :key="category"
+        :label="category"
+        @click="toggleCategory(category)"
+        :class="
+          selected.includes(category)
+            ? 'bg-primary text-white'
+            : 'bg-white text-black'
+        "
+      />
+    </div>
+  </q-scroll-area>
 </template>
 
 <script setup>
@@ -36,8 +42,7 @@ const toggleCategory = (category) => {
 
 <style scoped>
 button {
-  margin: 5px;
-  padding: 5px;
-  border-radius: 5px;
+  margin-right: 7px;
+  border-radius: 15px;
 }
 </style>

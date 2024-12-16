@@ -1,9 +1,11 @@
 <template>
-  <div class="content" id="categoryButtons">
-    <CategoryButton
-      :categories="categories"
-      v-model:categories="selectedCategories"
-    />
+  <div>
+    <div class="categoryButton">
+      <CategoryButton
+        :categories="categories"
+        v-model:categories="selectedCategories"
+      />
+    </div>
   </div>
   <div class="content" id="durationSelection">
     <div class="row">
@@ -32,7 +34,9 @@ import RandomSelector from "src/components/mealSelectionComponents/RandomSelecto
 import exampleCategories from "src/assets/exampleCategories.json";
 import { Preferences } from "@capacitor/preferences";
 
-const categories = exampleCategories.categories.map((category) => category.name);
+const categories = exampleCategories.categories.map(
+  (category) => category.name
+);
 const meals = ref([]);
 const selectedCategories = ref([]);
 const duration = ref(0);
@@ -73,13 +77,11 @@ onMounted(async () => {
 
 <style scoped>
 .content {
-  background-color: lightgray;
   margin: 2%;
   border-radius: 15px;
   padding: 15px;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .row {
@@ -98,5 +100,10 @@ h5 {
 
 .randomSelector {
   max-width: 100%;
+}
+
+.categoryButton {
+  margin-top: 4%;
+  margin-left: 2%;
 }
 </style>

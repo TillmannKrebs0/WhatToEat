@@ -6,6 +6,7 @@
       :meal="meal"
       @updateMeal="updateMeal"
       @removeMeal="removeMeal"
+      class="meal-card"
     />
   </div>
 </template>
