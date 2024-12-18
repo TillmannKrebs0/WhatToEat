@@ -13,14 +13,19 @@
     </div>
     <DurationSlider v-model="duration" class="duration-slider" />
   </div>
-  <div class="content" id="randomSelector" v-if="loaded">
-    <RandomSelector
+  <div class="content" id="randomSelector">
+    <RandomSelector v-if="loaded && filteredMeals.length > 0"
       :meals="filteredMeals"
       :categories="selectedCategories"
       :duration="duration"
       class="randomSelector"
       @select="showMealDetails"
     />
+    <div v-else class="no-meals">
+      <p v-if="loaded">Keine Mahlzeiten gefunden.</p>
+      <p v-if="loaded">Füge zuerst einige<br>Mahlzeiten hinzu!</p>
+      <p v-else>Lade Mahlzeiten...</p>
+    </div>
   </div>
 </template>
 
@@ -98,5 +103,14 @@ h5 {
 
 .randomSelector {
   max-width: 100%;
+}
+
+.no-meals {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.25rem;
 }
 </style>
