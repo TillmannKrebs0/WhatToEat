@@ -9,7 +9,7 @@
           <q-icon name="star_border" class="favorite-icon" @click="toggleFavorite" />
         </template>
       </q-icon>
-      <h3 @click="toggleDetails">{{ state.meal.title }}</h3>
+      <h3 @click="toggleDetails">{{ editedMeal.title }}</h3>
       <q-icon
         name="edit"
         class="edit-icon"
@@ -21,17 +21,17 @@
         @click="removeMeal"
       />
     </div>
-    <div v-if="state.isExpanded" class="meal-details">
-      <p v-if="state.meal.preparationTime"><strong>Dauer:</strong> {{ state.meal.preparationTime }} min.</p>
-      <p v-if="state.meal.ingredients.length > 0"><strong>Zutaten:</strong></p>
+    <div v-if="isExpanded" class="meal-details">
+      <p v-if="editedMeal.preparationTime"><strong>Dauer:</strong> {{ editedMeal.preparationTime }} min.</p>
+      <p v-if="editedMeal.ingredients.length > 0"><strong>Zutaten:</strong></p>
       <ul>
-        <li v-for="ingredient in state.meal.ingredients" :key="ingredient">{{ ingredient }}</li>
+        <li v-for="ingredient in editedMeal.ingredients" :key="ingredient">{{ ingredient }}</li>
       </ul>
-      <p v-if="state.meal.categories.length > 0"><strong>Kategorien:</strong> {{ state.meal.categories.join(', ') }}</p>
+      <p v-if="editedMeal.categories.length > 0"><strong>Kategorien:</strong> {{ editedMeal.categories.join(', ') }}</p>
     </div>
 
     <!-- Popup zum Bearbeiten der Mahlzeit -->
-    <q-dialog v-model="state.editPopupVisible" class="dialog">
+    <q-dialog v-model="editPopupVisible" class="dialog">
       <q-card :style="dialogStyle">
         <q-card-section>
           <div class="text-h5">Mahlzeit bearbeiten</div>
@@ -39,25 +39,25 @@
 
         <q-card-section>
           <q-input
-            v-model="tempMeal.title"
+            v-model="editedMeal.title"
             label="Titel"
             autofocus
           />
 
           <CategorySelection 
-            v-model="tempMeal.categories" 
+            v-model="editedMeal.categories" 
             label="Kategorien"
             :categories="categories" 
           />
 
           <div class="row">
             <p class="label">Zubereitungszeit:</p>
-            <p v-if="tempMeal.preparationTime > 0">{{ tempMeal.preparationTime }} Minuten</p>
+            <p v-if="editedMeal.preparationTime > 0">{{ editedMeal.preparationTime }} Minuten</p>
             <p v-else>-</p>
           </div> 
 
           <q-slider
-            v-model="tempMeal.preparationTime"
+            v-model="editedMeal.preparationTime"
             color="green"
             label="Zubereitungszeit"
             markers
@@ -69,12 +69,12 @@
           />
 
           <IngredientSelection 
-            v-model="tempMeal.ingredients"
+            v-model="editedMeal.ingredients"
           />
         </q-card-section>
 
         <q-card-actions>
-          <q-btn flat label="Abbrechen" @click="closeEditPopup" />
+          <q-btn flat label="Abbrechen" @click="cancelChanges" />
           <q-btn flat label="Speichern" @click="saveChanges" />
         </q-card-actions>
       </q-card>
@@ -83,27 +83,29 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue';
-import { QDialog, QCard, QCardSection, QCardActions, QIcon, QInput, QSlider } from 'quasar';
+import { ref, computed, watch } from 'vue';
+import { Preferences } from "@capacitor/preferences";
+import { QDialog, QCard, QCardSection, QCardActions, QIcon, QBtn, QInput, QSlider } from 'quasar';
 import CategorySelection from '../addMealComponents/CategorySelection.vue';
 import IngredientSelection from '../addMealComponents/IngredientSelection.vue';
 
+// Eigene tiefe Kopierfunktion
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 const props = defineProps({
-  meal: {
-    type: Object,
-    required: true,
-  },
+  meal: Object
 });
 
 const emit = defineEmits(['removeMeal', 'updateMeal']);
+  
+const isExpanded = ref(false);
+const isFavorite = ref(props.meal.categories.includes('Favoriten'));
+const editPopupVisible = ref(false);
 
-const state = reactive({
-  meal: { ...props.meal }, // Original-Daten
-  isExpanded: false,
-  editPopupVisible: false,
-});
-
-const tempMeal = reactive({ ...props.meal }); // Temporäre Kopie für Bearbeitungen
+// Temporäre Kopie von meal
+let editedMeal = ref(deepClone(props.meal));
 
 // Dynamische Dialoggröße
 const dialogStyle = computed(() => {
@@ -115,35 +117,72 @@ const dialogStyle = computed(() => {
   };
 });
 
-const openEditPopup = () => {
-  Object.assign(tempMeal, props.meal); // Daten in tempMeal kopieren
-  state.editPopupVisible = true;
-};
+// Watcher für Änderungen an props.meal
+watch(
+  () => props.meal,
+  (newMeal) => {
+    if (!editPopupVisible.value) {
+      editedMeal.value = deepClone(newMeal);
+    }
+  },
+  { immediate: true }
+);
 
-const saveChanges = () => {
-  Object.assign(state.meal, tempMeal); // Änderungen übernehmen
-  emit('updateMeal', state.meal); // Event senden
-  state.editPopupVisible = false;
-};
+const toggleFavorite = async () => {
+  isFavorite.value = !isFavorite.value;
 
-const closeEditPopup = () => {
-  state.editPopupVisible = false; // Dialog schließen, ohne Änderungen zu speichern
+  if (isFavorite.value) {
+    if (!editedMeal.value.categories.includes('Favoriten')) {
+      editedMeal.value.categories.push('Favoriten');
+    }
+  } else {
+    const index = editedMeal.value.categories.indexOf('Favoriten');
+    if (index !== -1) {
+      editedMeal.value.categories.splice(index, 1);
+    }
+  }
+
+  const { value } = await Preferences.get({ key: "meals" });
+  const mealsList = value ? JSON.parse(value) : [];
+
+  const mealIndex = mealsList.findIndex(meal => meal.id === editedMeal.value.id);
+  if (mealIndex !== -1) {
+    mealsList[mealIndex] = { ...editedMeal.value };
+  }
+
+  await Preferences.set({
+    key: "meals",
+    value: JSON.stringify(mealsList),
+  });
+
+  console.log("Meal updated:", editedMeal.value);
 };
 
 const toggleDetails = () => {
-  state.isExpanded = !state.isExpanded;
+  isExpanded.value = !isExpanded.value;
 };
 
 const removeMeal = () => {
-  emit('removeMeal', state.meal.id);
+  emit('removeMeal', props.meal.id);
 };
 
-const toggleFavorite = () => {
-  if (state.meal.categories.includes('Favoriten')) {
-    state.meal.categories = state.meal.categories.filter((cat) => cat !== 'Favoriten');
-  } else {
-    state.meal.categories.push('Favoriten');
-  }
+const openEditPopup = () => {
+  editedMeal.value = deepClone(props.meal); // Daten laden
+  editPopupVisible.value = true;
+};
+
+const closeEditPopup = () => {
+  editPopupVisible.value = false;
+};
+
+const saveChanges = () => {
+  emit('updateMeal', deepClone(editedMeal.value)); // Änderungen speichern
+  closeEditPopup();
+};
+
+const cancelChanges = () => {
+  editedMeal.value = deepClone(props.meal); // Änderungen verwerfen
+  closeEditPopup();
 };
 </script>
 
@@ -186,9 +225,7 @@ h3 {
   justify-content: space-between;
 }
 
-.edit-icon,
-.remove-icon,
-.favorite-icon {
+.edit-icon, .remove-icon, .favorite-icon {
   cursor: pointer;
   font-size: 1.5rem;
 }

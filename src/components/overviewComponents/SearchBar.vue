@@ -1,10 +1,8 @@
 <template>
   <q-input
     filled
-    v-model="searchQuery"
+    v-model="state.searchQuery"
     placeholder="Suche"
-    @input="onSearch"
-    @keyup.enter="onSearch"
     clearable
     class="q-mb-md"
   >
@@ -15,16 +13,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { reactive, watch } from "vue";
 
 // Emit event
 const emit = defineEmits(["update:query"]);
 
-// Reactive state
-const searchQuery = ref("");
+// Reactive state with reactive()
+const state = reactive({
+  searchQuery: "",
+});
 
-// Method
-const onSearch = () => {
-  emit("update:query", searchQuery.value);
-};
+// Automatically trigger search on each input change
+watch(() => state.searchQuery, (newQuery) => {
+  emit("update:query", newQuery);
+});
 </script>
