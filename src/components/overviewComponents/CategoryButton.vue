@@ -14,7 +14,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { watch } from 'vue';
+import { useCategories } from '../../composables/useCategories'; // Importiere das Composable
 
 const props = defineProps({
   categories: {
@@ -23,11 +24,17 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:categories"]);
+const emit = defineEmits(['update:categories']);
 
-const selected = ref([]);
+// Verwende das useCategories Composable
+const { selected, toggleCategory } = useCategories(); // Keine Initialkategorien mehr
 
-// Dummy Icon Mapping (this can be updated as per categories)
+// Beobachte Änderungen in den ausgewählten Kategorien und sende das Event
+watch(selected, (newSelected) => {
+  emit('update:categories', newSelected);
+});
+
+// Dummy Icon Mapping (dies kann angepasst werden)
 const getCategoryIcon = (category) => {
   switch (category) {
     case "Favoriten":
@@ -49,16 +56,6 @@ const getCategoryIcon = (category) => {
     default:
       return "";
   }
-};
-
-
-const toggleCategory = (category) => {
-  if (selected.value.includes(category)) {
-    selected.value = selected.value.filter((c) => c !== category);
-  } else {
-    selected.value.push(category);
-  }
-  emit("update:categories", selected.value);
 };
 </script>
 

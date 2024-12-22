@@ -13,18 +13,14 @@
 </template>
 
 <script setup>
-import { reactive, watch } from "vue";
+import { useSearch } from '../../composables/useSearch'; // Importiere das Composable
 
-// Emit event
-const emit = defineEmits(["update:query"]);
+// Definiere das emit
+const emit = defineEmits(['update:query']);
 
-// Reactive state with reactive()
-const state = reactive({
-  searchQuery: "",
-});
+// Verwende das useSearch Composable
+const { state, emitSearch } = useSearch();
 
-// Automatically trigger search on each input change
-watch(() => state.searchQuery, (newQuery) => {
-  emit("update:query", newQuery);
-});
+// Trigger das Suchereignis
+emitSearch(emit);
 </script>
