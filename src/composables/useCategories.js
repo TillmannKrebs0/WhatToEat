@@ -1,20 +1,23 @@
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
 export function useCategories() {
   // Anfangs keine Kategorie ausgewählt
-  const selected = ref([]);
+  const state = reactive({
+    selected: []
+  });
 
   // Funktion, um eine Kategorie hinzuzufügen oder zu entfernen
   const toggleCategory = (category) => {
-    if (selected.value.includes(category)) {
-      selected.value = selected.value.filter((c) => c !== category);
+    const index = state.selected.indexOf(category);
+    if (index !== -1) {
+      state.selected.splice(index, 1); // Kategorie entfernen
     } else {
-      selected.value.push(category);
+      state.selected.push(category); // Kategorie hinzufügen
     }
   };
 
   return {
-    selected,
+    selected: state, // Gebe das reaktive Objekt zurück
     toggleCategory
   };
 }

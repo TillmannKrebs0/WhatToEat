@@ -1,6 +1,7 @@
 <template>
   <div class="meal-card">
     <div class="header">
+      <!-- Favoriten-Icon -->
       <q-icon>
         <template v-if="isFavorite">
           <q-icon name="star" class="favorite-icon fav-selected" @click="toggleFavorite" />
@@ -9,7 +10,11 @@
           <q-icon name="star_border" class="favorite-icon" @click="toggleFavorite" />
         </template>
       </q-icon>
-      <h3 @click="toggleDetails">{{ editedMeal.title }}</h3>
+      
+      <!-- Titel des Gerichts -->
+      <h3 @click="toggleDetails" class="meal-title">{{ editedMeal.title }}</h3>
+
+      <!-- Editieren- und Löschen-Icons -->
       <q-icon
         name="edit"
         class="edit-icon"
@@ -21,6 +26,8 @@
         @click="removeMeal"
       />
     </div>
+
+    <!-- Detail-Ansicht -->
     <div v-if="isExpanded" class="meal-details">
       <p v-if="editedMeal.preparationTime"><strong>Dauer:</strong> {{ editedMeal.preparationTime }} min.</p>
       <p v-if="editedMeal.ingredients.length > 0"><strong>Zutaten:</strong></p>
@@ -43,7 +50,7 @@
             label="Titel"
             autofocus
           />
-
+          
           <CategorySelection 
             v-model="editedMeal.categories" 
             label="Kategorien"
@@ -54,7 +61,7 @@
             <p class="label">Zubereitungszeit:</p>
             <p v-if="editedMeal.preparationTime > 0">{{ editedMeal.preparationTime }} Minuten</p>
             <p v-else>-</p>
-          </div> 
+          </div>
 
           <q-slider
             v-model="editedMeal.preparationTime"
@@ -89,7 +96,6 @@ import { QDialog, QCard, QCardSection, QCardActions, QIcon, QBtn, QInput, QSlide
 import CategorySelection from '../addMealComponents/CategorySelection.vue';
 import IngredientSelection from '../addMealComponents/IngredientSelection.vue';
 
-// Eigene tiefe Kopierfunktion
 function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
@@ -99,15 +105,13 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['removeMeal', 'updateMeal']);
-  
+
 const isExpanded = ref(false);
 const isFavorite = ref(props.meal.categories.includes('Favoriten'));
 const editPopupVisible = ref(false);
 
-// Temporäre Kopie von meal
 let editedMeal = ref(deepClone(props.meal));
 
-// Dynamische Dialoggröße
 const dialogStyle = computed(() => {
   const isMobile = window.innerWidth <= 600;
   return {
@@ -117,7 +121,6 @@ const dialogStyle = computed(() => {
   };
 });
 
-// Watcher für Änderungen an props.meal
 watch(
   () => props.meal,
   (newMeal) => {
@@ -167,7 +170,7 @@ const removeMeal = () => {
 };
 
 const openEditPopup = () => {
-  editedMeal.value = deepClone(props.meal); // Daten laden
+  editedMeal.value = deepClone(props.meal);
   editPopupVisible.value = true;
 };
 
@@ -176,20 +179,52 @@ const closeEditPopup = () => {
 };
 
 const saveChanges = () => {
-  emit('updateMeal', deepClone(editedMeal.value)); // Änderungen speichern
+  emit('updateMeal', deepClone(editedMeal.value));
   closeEditPopup();
 };
 
 const cancelChanges = () => {
-  editedMeal.value = deepClone(props.meal); // Änderungen verwerfen
+  editedMeal.value = deepClone(props.meal);
   closeEditPopup();
 };
 </script>
 
 <style scoped>
+.meal-card {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+}
+
 h3 {
-  width: 80%;
+  margin: 0;
+  font-size: 1.2rem;
   cursor: pointer;
+  overflow-wrap: break-word; /* Zeilenumbruch erzwingen */
+  word-wrap: break-word; /* Alternative für ältere Browser */
+  hyphens: auto; /* Automatischer Silbentrennung */
+  white-space: normal; /* Verhindert, dass der Text in einer Zeile bleibt */
+}
+
+.edit-icon, .remove-icon, .favorite-icon {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.favorite-icon.fav-selected {
+  color: #f1c40f;
+}
+
+.meal-details {
+  margin-top: 1rem;
 }
 
 .row {
@@ -205,32 +240,5 @@ h3 {
   margin: 0;
   color: #888;
   font-size: 0.8rem;
-}
-
-.meal-card {
-  padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.meal-card h3 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.edit-icon, .remove-icon, .favorite-icon {
-  cursor: pointer;
-  font-size: 1.5rem;
-}
-
-.favorite-icon.fav-selected {
-  color: #f1c40f;
 }
 </style>

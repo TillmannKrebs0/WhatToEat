@@ -1,37 +1,41 @@
 <template>
   <div>
     <q-btn
-      v-for="category in categories"
+      v-for="category in categoriesArray"
       :key="category"
       @click="toggleCategory(category)"
-      :class="selected.includes(category) ? 'bg-primary text-white' : 'bg-white text-black'"
+      :class="selected.selected.includes(category) ? 'bg-primary text-white' : 'bg-white text-black'"
       class="category-button"
     >
-      <q-icon :name="getCategoryIcon(category)"/>
+      <q-icon :name="getCategoryIcon(category)" />
       {{ category }}
     </q-btn>
   </div>
 </template>
 
 <script setup>
-import { watch } from 'vue';
 import { useCategories } from '../../composables/useCategories'; // Importiere das Composable
-
-const props = defineProps({
-  categories: {
-    type: Array,
-    required: true,
-  },
-});
-
-const emit = defineEmits(['update:categories']);
+import { watchEffect } from 'vue';
 
 // Verwende das useCategories Composable
 const { selected, toggleCategory } = useCategories(); // Keine Initialkategorien mehr
 
-// Beobachte Änderungen in den ausgewählten Kategorien und sende das Event
-watch(selected, (newSelected) => {
-  emit('update:categories', newSelected);
+// Definiere Props
+const props = defineProps({
+  categories: {
+    type: Array,
+    required: true,
+    default: () => [] // Standardwert ist ein leeres Array
+  }
+});
+
+// Sicherstellen, dass categories als Array behandelt wird
+const categoriesArray = Array.isArray(props.categories) ? props.categories : [];
+
+// Beobachten, wenn sich `selected` ändert und an den Eltern-Component weiterleiten
+const emit = defineEmits(['update:categories']);
+watchEffect(() => {
+  emit('update:categories', selected.selected); // Gebe das Array der ausgewählten Kategorien weiter
 });
 
 // Dummy Icon Mapping (dies kann angepasst werden)
