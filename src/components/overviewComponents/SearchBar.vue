@@ -1,20 +1,13 @@
 <template>
   <q-input
     rounded outlined
-<<<<<<< HEAD
-    v-model="searchQuery"
-=======
     v-model="state.searchQuery"
->>>>>>> clemensFixes
     placeholder="Suche"
     clearable
     class="q-mb-md input-box"
     bg-color="white"
-<<<<<<< HEAD
-=======
     @input="onInput"
     @clear="onClear"
->>>>>>> clemensFixes
   >
     <template v-slot:prepend>
       <q-icon name="search" @click="onSearch" color="black"/>

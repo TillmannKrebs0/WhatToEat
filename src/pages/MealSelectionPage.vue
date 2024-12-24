@@ -87,6 +87,7 @@ onMounted(async () => {
   padding: 15px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .row {
@@ -107,13 +108,11 @@ h5 {
   max-width: 100%;
 }
 
-<<<<<<< HEAD
 .categoryButton {
   margin-top: 4%;
   margin-left: 2%;
 }
-</style>
-=======
+
 .no-meals {
   display: flex;
   flex-direction: column;
@@ -123,4 +122,3 @@ h5 {
   font-size: 1.25rem;
 }
 </style>
->>>>>>> clemensFixes

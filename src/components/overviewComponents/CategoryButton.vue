@@ -1,20 +1,5 @@
 <template>
-<<<<<<< HEAD
-  <q-scroll-area :visible="false" style="height: 50px">
-    <div class="row no-wrap">
-      <q-btn
-        v-for="category in categories"
-        :key="category"
-        :label="category"
-        @click="toggleCategory(category)"
-        :class="
-          selected.includes(category)
-            ? 'bg-primary text-white'
-            : 'bg-white text-black'
-        "
-      />
-=======
-  <q-scroll-area :visible="true" style="height: 50px; width: 100%;">
+  <q-scroll-area :visible="true" style="height: 70px; width: 100%;">
     <div class="row no-wrap">
       <q-btn
         v-for="category in categoriesArray"
@@ -26,7 +11,6 @@
         <q-icon :name="getCategoryIcon(category)" />
         {{ category }}
       </q-btn>
->>>>>>> clemensFixes
     </div>
   </q-scroll-area>
 </template>
@@ -77,12 +61,25 @@ const getCategoryIcon = (category) => {
 </script>
 
 <style scoped>
-button {
-<<<<<<< HEAD
-  margin-right: 7px;
-=======
-  margin: 7px;
->>>>>>> clemensFixes
+/* Zeilen-Layout für die Buttons */
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto; /* Ermöglicht Scrollen, wenn die Buttons nicht alle passen */
+}
+
+.category-button {
+  margin: 5px;
   border-radius: 15px;
+  font-size: 0.9rem; /* Standard-Schriftgröße */
+  padding: 5px 10px; /* Standard-Padding */
+}
+
+/* Für mobile Geräte: Schaltflächen werden kleiner */
+@media (max-width: 600px) {
+  .category-button {
+    font-size: 0.8rem; /* Kleinere Schrift */
+    padding: 3px 8px;  /* Weniger Padding */
+  }
 }
 </style>
