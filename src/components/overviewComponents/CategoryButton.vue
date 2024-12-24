@@ -1,44 +1,41 @@
 <template>
-  <div>
-    <q-btn
-      v-for="category in categoriesArray"
-      :key="category"
-      @click="toggleCategory(category)"
-      :class="selected.selected.includes(category) ? 'bg-primary text-white' : 'bg-white text-black'"
-      class="category-button"
-    >
-      <q-icon :name="getCategoryIcon(category)" />
-      {{ category }}
-    </q-btn>
-  </div>
+  <q-scroll-area :visible="true" style="height: 50px; width: 100%;">
+    <div class="row no-wrap">
+      <q-btn
+        v-for="category in categoriesArray"
+        :key="category"
+        @click="toggleCategory(category)"
+        :class="selected.selected.includes(category) ? 'bg-primary text-white' : 'bg-white text-black'"
+        class="category-button"
+      >
+        <q-icon :name="getCategoryIcon(category)" />
+        {{ category }}
+      </q-btn>
+    </div>
+  </q-scroll-area>
 </template>
 
 <script setup>
-import { useCategories } from '../../composables/useCategories'; // Importiere das Composable
+import { useCategories } from '../../composables/useCategories';
 import { watchEffect } from 'vue';
 
-// Verwende das useCategories Composable
-const { selected, toggleCategory } = useCategories(); // Keine Initialkategorien mehr
+const { selected, toggleCategory } = useCategories();
 
-// Definiere Props
 const props = defineProps({
   categories: {
     type: Array,
     required: true,
-    default: () => [] // Standardwert ist ein leeres Array
+    default: () => []
   }
 });
 
-// Sicherstellen, dass categories als Array behandelt wird
 const categoriesArray = Array.isArray(props.categories) ? props.categories : [];
 
-// Beobachten, wenn sich `selected` ändert und an den Eltern-Component weiterleiten
 const emit = defineEmits(['update:categories']);
 watchEffect(() => {
-  emit('update:categories', selected.selected); // Gebe das Array der ausgewählten Kategorien weiter
+  emit('update:categories', selected.selected);
 });
 
-// Dummy Icon Mapping (dies kann angepasst werden)
 const getCategoryIcon = (category) => {
   switch (category) {
     case "Favoriten":
@@ -64,13 +61,8 @@ const getCategoryIcon = (category) => {
 </script>
 
 <style scoped>
-.category-button {
-  margin: 5px;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.category-button .category-icon {
-  margin-right: 8px; /* Abstand zwischen Icon und Text */
+button {
+  margin: 7px;
+  border-radius: 15px;
 }
 </style>
