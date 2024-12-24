@@ -190,43 +190,9 @@ const cancelChanges = () => {
 </script>
 
 <style scoped>
-.meal-card {
-  padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.header {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  gap: 10px;
-  align-items: center;
-}
-
 h3 {
-  margin: 0;
-  font-size: 1.2rem;
+  width: 55%;
   cursor: pointer;
-  overflow-wrap: break-word;
-  word-wrap: break-word; 
-  hyphens: auto; 
-  white-space: normal; 
-  line-height: 1.2; 
-}
-
-.edit-icon, .remove-icon, .favorite-icon {
-  cursor: pointer;
-  font-size: 1.5rem;
-  justify-self: center;
-}
-
-.favorite-icon.fav-selected {
-  color: #f1c40f;
-}
-
-.meal-details {
-  margin-top: 1rem;
 }
 
 .row {
@@ -238,9 +204,49 @@ h3 {
   margin: 0;
 }
 
-.label {
+.label{
   margin: 0;
   color: #888;
   font-size: 0.8rem;
+}
+
+.meal-card {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  margin-bottom: 1%;
+
+}
+
+.meal-card h3 {
+  margin: 0;
+  font-size: 1.0rem;
+  cursor: pointer;
+  overflow-wrap: break-word;
+  word-wrap: break-word; 
+  hyphens: auto; 
+  white-space: normal; 
+  line-height: 1.25;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.edit-icon, .remove-icon, .favorite-icon {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.favorite-icon {
+  margin-left: 25px;
+}
+
+.favorite-icon.fav-selected {
+  color: #F6D860;
 }
 </style>

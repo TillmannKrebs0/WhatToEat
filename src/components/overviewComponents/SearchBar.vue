@@ -1,10 +1,11 @@
 <template>
   <q-input
-    filled
+    rounded outlined
     v-model="state.searchQuery"
     placeholder="Suche"
     clearable
-    class="q-mb-md"
+    class="q-mb-md input-box"
+    bg-color="white"
     @input="onInput"
     @clear="onClear"
   >
