@@ -208,15 +208,17 @@ h3 {
   margin: 0;
   font-size: 1.2rem;
   cursor: pointer;
-  overflow-wrap: break-word; /* Zeilenumbruch erzwingen */
-  word-wrap: break-word; /* Alternative für ältere Browser */
-  hyphens: auto; /* Automatischer Silbentrennung */
-  white-space: normal; /* Verhindert, dass der Text in einer Zeile bleibt */
+  overflow-wrap: break-word;
+  word-wrap: break-word; 
+  hyphens: auto; 
+  white-space: normal; 
+  line-height: 1.2; 
 }
 
 .edit-icon, .remove-icon, .favorite-icon {
   cursor: pointer;
   font-size: 1.5rem;
+  justify-self: center;
 }
 
 .favorite-icon.fav-selected {
