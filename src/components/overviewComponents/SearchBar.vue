@@ -1,13 +1,20 @@
 <template>
   <q-input
     rounded outlined
+<<<<<<< HEAD
     v-model="searchQuery"
+=======
+    v-model="state.searchQuery"
+>>>>>>> clemensFixes
     placeholder="Suche"
-    @input="onSearch"
-    @keyup.enter="onSearch"
     clearable
     class="q-mb-md input-box"
     bg-color="white"
+<<<<<<< HEAD
+=======
+    @input="onInput"
+    @clear="onClear"
+>>>>>>> clemensFixes
   >
     <template v-slot:prepend>
       <q-icon name="search" @click="onSearch" color="black"/>
@@ -17,18 +24,30 @@
 
 
 <script setup>
-import { ref } from "vue";
+import { useSearch } from '../../composables/useSearch'; // Importiere das Composable
 
-// Emit event
-const emit = defineEmits(["update:query"]);
+// Definiere das emit
+const emit = defineEmits(['update:query']);
 
-// Reactive state
-const searchQuery = ref("");
+// Verwende das useSearch Composable
+const { state, emitSearch } = useSearch();
 
-// Method
-const onSearch = () => {
-  emit("update:query", searchQuery.value);
+// Funktion, die beim Eingabewert ändern aufgerufen wird
+const onInput = () => {
+  // Wenn der Suchbegriff leer ist, triggern wir die Suche
+  if (state.searchQuery === '') {
+    emitSearch(emit);
+  }
 };
+
+// Funktion, die beim Löschen der Eingabe (Clear-Button) aufgerufen wird
+const onClear = () => {
+  state.searchQuery = ''; // Setze den Wert manuell auf leer
+  emitSearch(emit); // Trigger das Suchereignis
+};
+
+// Trigger das Suchereignis beim Initialisieren
+emitSearch(emit);
 </script>
 
 <style scoped>

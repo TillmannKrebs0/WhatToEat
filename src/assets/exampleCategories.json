@@ -1,25 +1,36 @@
 {
-      "categories": [
-        {
-          "id": 1,
-          "name": "Favoriten"
-        },
-        {
-          "id": 2,
-          "name": "Nudeln"
-        },
-        {
-          "id": 3,
-          "name": "Gesund"
-        },
-        {
-          "id": 4,
-          "name": "Schnell"
-        },
-        {
-          "id": 5,
-          "name": "Vegetarisch"
-        }
-      ]
+  "categories": [
+    {
+      "id": 1,
+      "name": "Favoriten"
+    },
+    {
+      "id": 2,
+      "name": "Nudeln"
+    },
+    {
+      "id": 3,
+      "name": "Gesund"
+    },
+    {
+      "id": 4,
+      "name": "Schnell"
+    },
+    {
+      "id": 5,
+      "name": "Vegetarisch"
+    },
+    {
+      "id": 6,
+      "name": "Vegan"
+    },
+    {
+      "id": 7,
+      "name": "Fleisch"
+    },
+    {
+      "id": 8,
+      "name": "Dessert"
     }
-    
+  ]
+}

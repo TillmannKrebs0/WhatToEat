@@ -13,7 +13,10 @@
     />
     <!-- Popup für Details des gewonnenen Gerichts -->
     <div v-if="showpopup" class="popup-overlay">
-      <div class="popup">
+      <div 
+        class="popup"
+        :class="popupClass"
+      >
         <h3>Gewonnen: {{ selectedPrize?.name }}</h3>
 
         <div v-if="selectedPrize">
@@ -128,6 +131,14 @@ const closePopup = () => {
   showpopup.value = false; // Popup schließen
   selectedPrize.value = null;
 };
+
+// Dynamische Klassen für Popup-Größen basierend auf Bildschirmbreite
+const popupClass = computed(() => {
+  const width = window.innerWidth;
+  if (width < 600) return "popup-small";
+  if (width < 1024) return "popup-medium";
+  return "popup-large";
+});
 </script>
 
 <style scoped>
@@ -142,6 +153,7 @@ const closePopup = () => {
   justify-content: center;
   align-items: center;
   z-index: 10;
+  overflow: hidden;
 }
 
 .popup {
@@ -149,17 +161,30 @@ const closePopup = () => {
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-  max-width: 400px;
   width: 90%;
+  max-width: 400px;
+  max-height: 80%; /* Reduziert die Höhe dynamisch */
+  overflow-y: auto; /* Ermöglicht vertikales Scrollen */
+  overflow-x: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-ul {
-  padding-left: 20px;
-  text-align: left;
+.popup-small {
+  width: 85%; /* Reduzierte Breite für kleine Bildschirme */
+  max-height: 70%; /* Noch kleinere Höhe */
+  font-size: 14px; /* Kleinere Schriftgröße */
 }
 
-ul li {
-  margin-bottom: 5px;
+.popup-medium {
+  width: 75%;
+  max-height: 75%;
+  font-size: 16px;
+}
+
+.popup-large {
+  width: 60%;
+  max-height: 75%;
+  font-size: 18px;
 }
 
 button {

@@ -1,6 +1,7 @@
 <template>
   <div class="meal-card">
     <div class="header">
+      <!-- Favoriten-Icon -->
       <q-icon>
         <template v-if="isFavorite">
           <q-icon name="star" class="favorite-icon fav-selected" @click="toggleFavorite" />
@@ -9,7 +10,11 @@
           <q-icon name="star_border" class="favorite-icon" @click="toggleFavorite" />
         </template>
       </q-icon>
-      <h3 @click="toggleDetails">{{ meal.title }}</h3>
+      
+      <!-- Titel des Gerichts -->
+      <h3 @click="toggleDetails" class="meal-title">{{ editedMeal.title }}</h3>
+
+      <!-- Editieren- und Löschen-Icons -->
       <q-icon
         name="edit"
         class="edit-icon"
@@ -21,13 +26,15 @@
         @click="removeMeal"
       />
     </div>
+
+    <!-- Detail-Ansicht -->
     <div v-if="isExpanded" class="meal-details">
-      <p v-if="meal.preparationTime"><strong>Dauer:</strong> {{ meal.preparationTime }} min.</p>
-      <p v-if="meal.ingredients.length > 0"><strong>Zutaten:</strong></p>
+      <p v-if="editedMeal.preparationTime"><strong>Dauer:</strong> {{ editedMeal.preparationTime }} min.</p>
+      <p v-if="editedMeal.ingredients.length > 0"><strong>Zutaten:</strong></p>
       <ul>
-        <li v-for="ingredient in meal.ingredients" :key="ingredient">{{ ingredient }}</li>
+        <li v-for="ingredient in editedMeal.ingredients" :key="ingredient">{{ ingredient }}</li>
       </ul>
-      <p v-if="meal.categories.length > 0"><strong>Kategorien:</strong> {{ meal.categories.join(', ') }}</p>
+      <p v-if="editedMeal.categories.length > 0"><strong>Kategorien:</strong> {{ editedMeal.categories.join(', ') }}</p>
     </div>
 
     <!-- Popup zum Bearbeiten der Mahlzeit -->
@@ -43,7 +50,7 @@
             label="Titel"
             autofocus
           />
-
+          
           <CategorySelection 
             v-model="editedMeal.categories" 
             label="Kategorien"
@@ -54,7 +61,7 @@
             <p class="label">Zubereitungszeit:</p>
             <p v-if="editedMeal.preparationTime > 0">{{ editedMeal.preparationTime }} Minuten</p>
             <p v-else>-</p>
-          </div> 
+          </div>
 
           <q-slider
             v-model="editedMeal.preparationTime"
@@ -68,14 +75,13 @@
             :markers="10"
           />
 
-
           <IngredientSelection 
             v-model="editedMeal.ingredients"
           />
         </q-card-section>
 
         <q-card-actions>
-          <q-btn flat label="Abbrechen" @click="closeEditPopup" />
+          <q-btn flat label="Abbrechen" @click="cancelChanges" />
           <q-btn flat label="Speichern" @click="saveChanges" />
         </q-card-actions>
       </q-card>
@@ -84,25 +90,28 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Preferences } from "@capacitor/preferences";
 import { QDialog, QCard, QCardSection, QCardActions, QIcon, QBtn, QInput, QSlider } from 'quasar';
 import CategorySelection from '../addMealComponents/CategorySelection.vue';
 import IngredientSelection from '../addMealComponents/IngredientSelection.vue';
+
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 
 const props = defineProps({
   meal: Object
 });
 
 const emit = defineEmits(['removeMeal', 'updateMeal']);
-  
+
 const isExpanded = ref(false);
 const isFavorite = ref(props.meal.categories.includes('Favoriten'));
 const editPopupVisible = ref(false);
 
-const editedMeal = ref({ ...props.meal });
+let editedMeal = ref(deepClone(props.meal));
 
-// Dynamische Dialoggröße
 const dialogStyle = computed(() => {
   const isMobile = window.innerWidth <= 600;
   return {
@@ -111,6 +120,16 @@ const dialogStyle = computed(() => {
     minWidth: '300px',
   };
 });
+
+watch(
+  () => props.meal,
+  (newMeal) => {
+    if (!editPopupVisible.value) {
+      editedMeal.value = deepClone(newMeal);
+    }
+  },
+  { immediate: true }
+);
 
 const toggleFavorite = async () => {
   isFavorite.value = !isFavorite.value;
@@ -143,7 +162,6 @@ const toggleFavorite = async () => {
 };
 
 const toggleDetails = () => {
-  console.log(props.meal.preparationTime);
   isExpanded.value = !isExpanded.value;
 };
 
@@ -152,17 +170,21 @@ const removeMeal = () => {
 };
 
 const openEditPopup = () => {
-  editedMeal.value = { ...props.meal };
+  editedMeal.value = deepClone(props.meal);
   editPopupVisible.value = true;
 };
 
 const closeEditPopup = () => {
   editPopupVisible.value = false;
-  window.location.reload();
 };
 
 const saveChanges = () => {
-  emit('updateMeal', editedMeal.value);
+  emit('updateMeal', deepClone(editedMeal.value));
+  closeEditPopup();
+};
+
+const cancelChanges = () => {
+  editedMeal.value = deepClone(props.meal);
   closeEditPopup();
 };
 </script>
@@ -193,14 +215,17 @@ h3 {
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  margin-bottom: 2%;
-
 }
 
 .meal-card h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.0rem;
+  cursor: pointer;
+  overflow-wrap: break-word;
+  word-wrap: break-word; 
+  hyphens: auto; 
+  white-space: normal; 
+  line-height: 1.25;
 }
 
 .header {
