@@ -1,5 +1,6 @@
 <template>
   <q-input
+    ref="searchInputRef"
     rounded outlined
     v-model="state.searchQuery"
     placeholder="Suche"
@@ -10,33 +11,32 @@
     @clear="onClear"
   >
     <template v-slot:prepend>
-      <q-icon name="search" @click="onSearch" color="black"/>
+      <q-icon name="search" color="black" />
     </template>
   </q-input>
 </template>
 
-
 <script setup>
-import { useSearch } from '../../composables/useSearch'; // Importiere das Composable
+import { ref } from 'vue';
+import { useSearch } from '../../composables/useSearch';
 
-// Definiere das emit
 const emit = defineEmits(['update:query']);
-
-// Verwende das useSearch Composable
 const { state, emitSearch } = useSearch();
 
-// Funktion, die beim Eingabewert ändern aufgerufen wird
+// Template Ref für q-input
+const searchInputRef = ref(null);
+
+// wenn Suche geändert wird
 const onInput = () => {
-  // Wenn der Suchbegriff leer ist, triggern wir die Suche
   if (state.searchQuery === '') {
     emitSearch(emit);
   }
 };
 
-// Funktion, die beim Löschen der Eingabe (Clear-Button) aufgerufen wird
+// Löschen der Suchanfrage
 const onClear = () => {
-  state.searchQuery = ''; // Setze den Wert manuell auf leer
-  emitSearch(emit); // Trigger das Suchereignis
+  state.searchQuery = '';
+  emitSearch(emit);
 };
 
 // Trigger das Suchereignis beim Initialisieren
@@ -44,7 +44,4 @@ emitSearch(emit);
 </script>
 
 <style scoped>
-
-
-
 </style>
