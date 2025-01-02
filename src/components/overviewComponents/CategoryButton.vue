@@ -1,48 +1,85 @@
 <template>
-  <q-scroll-area :visible="false" style="height: 50px">
+  <q-scroll-area :visible="true" style="height: 70px; width: 100%;">
     <div class="row no-wrap">
       <q-btn
-        v-for="category in categories"
+        v-for="category in categoriesArray"
         :key="category"
-        :label="category"
         @click="toggleCategory(category)"
-        :class="
-          selected.includes(category)
-            ? 'bg-primary text-white'
-            : 'bg-white text-black'
-        "
-      />
+        :class="selected.selected.includes(category) ? 'bg-primary text-white' : 'bg-white text-black'"
+        class="category-button"
+      >
+        <q-icon :name="getCategoryIcon(category)" />
+        {{ category }}
+      </q-btn>
     </div>
   </q-scroll-area>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { useCategories } from '../../composables/useCategories';
+import { watchEffect } from 'vue';
+
+const { selected, toggleCategory } = useCategories();
 
 const props = defineProps({
   categories: {
     type: Array,
     required: true,
-  },
+    default: () => []
+  }
 });
 
-const emit = defineEmits(["update:categories"]);
+const categoriesArray = Array.isArray(props.categories) ? props.categories : [];
 
-const selected = ref([]);
+const emit = defineEmits(['update:categories']);
+watchEffect(() => {
+  emit('update:categories', selected.selected);
+});
 
-const toggleCategory = (category) => {
-  if (selected.value.includes(category)) {
-    selected.value = selected.value.filter((c) => c !== category);
-  } else {
-    selected.value.push(category);
+const getCategoryIcon = (category) => {
+  switch (category) {
+    case "Favoriten":
+      return "star";
+    case "Nudeln":
+      return "restaurant_menu";
+    case "Gesund":
+      return "fitness_center";
+    case "Schnell":
+      return "fastfood";
+    case "Vegetarisch":
+      return "eco";
+    case "Vegan":
+      return "spa";
+    case "Fleisch":
+      return "restaurant";
+    case "Dessert":
+      return "cake";
+    default:
+      return "";
   }
-  emit("update:categories", selected.value);
 };
 </script>
 
 <style scoped>
-button {
-  margin-right: 7px;
+/* Zeilen-Layout für die Buttons */
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto; /* Ermöglicht Scrollen, wenn die Buttons nicht alle passen */
+}
+
+.category-button {
+  margin: 5px;
   border-radius: 15px;
+  font-size: 0.9rem; /* Standard-Schriftgröße */
+  padding: 5px 10px; /* Standard-Padding */
+}
+
+/* Für mobile Geräte: Schaltflächen werden kleiner */
+@media (max-width: 600px) {
+  .category-button {
+    font-size: 0.8rem; /* Kleinere Schrift */
+    padding: 3px 8px;  /* Weniger Padding */
+  }
 }
 </style>
