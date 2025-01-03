@@ -49,6 +49,10 @@ watch(ingredients, (newValue) => {
   emit("update:model-value", newValue);
 }, { deep: true });
 
+watch(() => props.modelValue, (newValue) => {
+  ingredients.value = newValue || [];
+}, { deep: true });
+
 const addIngredients = () => {
   const newIngredients = ingredientsInput.value
     .split(",")

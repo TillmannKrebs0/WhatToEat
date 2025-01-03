@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import categorieList from "../../assets/exampleCategories.json";
 
 const props = defineProps(["modelValue"]);
@@ -23,6 +23,10 @@ const options = ref(categorieList.categories.map((category) => category.name));
 const onSelectionChange = (newValues) => {
   emit("update:model-value", newValues); // Notify the parent
 };
+
+watch(() => props.modelValue, (newValue) => {
+  multiple.value = newValue || [];
+}, { deep: true });
 
 /*
 

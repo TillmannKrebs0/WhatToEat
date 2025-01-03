@@ -47,8 +47,15 @@ const selectedCategories = ref([]);
 const duration = ref(0);
 const ingredients = ref([]);
 
-const submitMeal = async () => {
+const resetForm = () => {
+  // Reset all form values
+  text.value = "";
+  selectedCategories.value = [];
+  duration.value = 0;
+  ingredients.value = [];
+};
 
+const submitMeal = async () => {
   if (text.value === "") {
     console.log("need to put in a title");
     alert("Bitte geben Sie einen Namen für das Gericht ein");
@@ -84,7 +91,7 @@ const submitMeal = async () => {
   console.log("Meal saved:", newMeal);
   alert("Das Gericht wurde erfolgreich gespeichert");
 
-  window.location.reload();
+  resetForm()
 };
 </script>
 
