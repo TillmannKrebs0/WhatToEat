@@ -16,6 +16,8 @@
   import MealCard from "./MealCard.vue";
   import { Preferences } from "@capacitor/preferences";
 
+  const emit = defineEmits(['update:meals']);
+
   const props = defineProps({
     meals: Array,
     categories: Array,
@@ -33,11 +35,15 @@
   const removeMeal = async (id) => {
     const updatedMeals = props.meals.filter(meal => meal.id !== id);
     await saveMealsToPreferences(updatedMeals);
+    emit('update:meals', updatedMeals);
   };
 
   const updateMeal = async (updatedMeal) => {
-    const updatedMeals = props.meals.map(meal => meal.id === updatedMeal.id ? updatedMeal : meal);
+    const updatedMeals = props.meals.map(meal => 
+      meal.id === updatedMeal.id ? updatedMeal : meal
+    );
     await saveMealsToPreferences(updatedMeals);
+    emit('update:meals', updatedMeals);
   };
 
   const saveMealsToPreferences = async (meals) => {

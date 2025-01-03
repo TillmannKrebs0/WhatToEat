@@ -10,7 +10,7 @@
   </div>
   <div class="mealList" id="mealList">
     <MealList
-      :meals="meals"
+      v-model:meals="meals"
       :categories="selectedCategories"
       :query="searchQuery"
     />
@@ -18,15 +18,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import SearchBar from "../components/overviewComponents/SearchBar.vue";
 import CategoryButton from "../components/overviewComponents/CategoryButton.vue";
 import MealList from "../components/overviewComponents/MealList.vue";
 import exampleCategories from "src/assets/exampleCategories.json";
 import { Preferences } from "@capacitor/preferences";
 
-const categories = exampleCategories.categories.map(
-  (category) => category.name
+const categories = computed(() =>
+  exampleCategories.categories.map((category) => category.name)
 );
 const meals = ref([]);
 const searchQuery = ref("");
