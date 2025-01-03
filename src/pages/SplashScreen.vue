@@ -8,7 +8,7 @@
 
 
 <script setup>
-  import logo from "../../public/icons/WTElogo1.png"
+  import logo from "/icons/WTElogo1.png"
 </script>
 
 <style scoped>
