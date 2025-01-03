@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Fortune Wheel component, rendered only if there are prizes -->
     <FortuneWheel
       :key="prizes.length > 0 ? JSON.stringify(prizes) : 'empty'"
       v-if="prizes.length > 0"
@@ -11,19 +12,16 @@
       @rotateStart="onRotateStart"
       @rotateEnd="onRotateEnd"
     />
-    <!-- Popup für Details des gewonnenen Gerichts -->
+    <!-- Popup for displaying details of the won meal -->
     <div v-if="showpopup" class="popup-overlay">
-      <div 
-        class="popup"
-        :class="popupClass"
-      >
+      <div class="popup" :class="popupClass">
         <h3>Gewonnen: {{ selectedPrize?.name }}</h3>
 
+        <!-- Display meal details if a prize is selected -->
         <div v-if="selectedPrize">
           <div v-if="selectedPrize.preparationTime">
             <p><strong>Dauer:</strong> {{ selectedPrize.preparationTime }} min.</p>
           </div>
-
           <div v-if="selectedPrize.ingredients && selectedPrize.ingredients.length > 0">
             <p><strong>Zutaten:</strong></p>
             <ul>
@@ -32,12 +30,12 @@
               </li>
             </ul>
           </div>
-
           <div v-if="selectedPrize.categories && selectedPrize.categories.length > 0">
             <p><strong>Kategorien:</strong> {{ selectedPrize.categories.join(", ") }}</p>
           </div>
         </div>
-        
+
+        <!-- Button to close the popup -->
         <button @click="closePopup" class="close-button bg-primary text-white">Schließen</button>
       </div>
     </div>
@@ -46,21 +44,29 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useQuasar } from 'quasar';
+import { useQuasar } from "quasar";
 import FortuneWheel from "vue-fortune-wheel";
 import "vue-fortune-wheel/style.css";
 
+// Define props for meals and categories
 const props = defineProps<{
   meals: Array<{ title: string; categories: string[]; ingredients: string[]; preparationTime: number }>;
   categories: string[];
 }>();
 
-const duration = 2500;
+// Constants
+const duration = 2500; // Duration for the wheel spin (ms)
 
-// Popup-Status und gewonnenes Gericht
-const showpopup = ref(false);
-const selectedPrize = ref<{ name: string; categories: string[]; ingredients: string[]; preparationTime: number } | null>(null);
+// Reactive variables
+const showpopup = ref(false); // Popup visibility
+const selectedPrize = ref<{
+  name: string;
+  categories: string[];
+  ingredients: string[];
+  preparationTime: number;
+} | null>(null); // The selected prize details
 
+// Compute prizes based on filtered meals
 const prizes = computed(() => {
   const filteredMeals = props.meals.filter((meal) =>
     props.categories.length > 0
@@ -68,7 +74,8 @@ const prizes = computed(() => {
       : true
   );
 
-  if (filteredMeals.length === 0) return [];
+  if (filteredMeals.length === 0) return []; // No prizes if no filtered meals
+
   console.log(filteredMeals);
 
   const probabilities = calculateProbability(filteredMeals.length);
@@ -77,22 +84,24 @@ const prizes = computed(() => {
     id: index,
     name: meal.title,
     categories: meal.categories,
-    ingredients: meal.ingredients, // Zutaten für das Popup
-    preparationTime: meal.preparationTime, // Zubereitungszeit für das Popup
-    bgColor: getBgColor(index, filteredMeals.length-1),
+    ingredients: meal.ingredients,
+    preparationTime: meal.preparationTime,
+    bgColor: getBgColor(index, filteredMeals.length - 1),
     color: "#000",
     probability: probabilities[index],
   }));
 });
 
+// Helper function to calculate background colors for prizes
 function getBgColor(index: number, lastIndex: number) {
   const colors = ["#FF7F3F", "#F6D860", "#95CD41", "#A1EEBD"];
-  if (index == lastIndex && lastIndex % 3 == 0) {
-    return colors[index % 3 + 1]
+  if (index === lastIndex && lastIndex % 3 === 0) {
+    return colors[(index % 3) + 1];
   }
   return colors[index % 3];
 }
 
+// Helper function to calculate prize probabilities
 function calculateProbability(size: number): number[] {
   if (size === 0) return [];
 
@@ -109,6 +118,7 @@ function calculateProbability(size: number): number[] {
   return probabilities;
 }
 
+// Configuration for the Fortune Wheel canvas
 const canvasOptions = {
   radius: 250,
   borderColor: "#333",
@@ -118,21 +128,22 @@ const canvasOptions = {
   btnText: "Los!",
 };
 
+// Event handlers
 const onRotateStart = () => {
   console.log("Das Glücksrad dreht sich!");
 };
 
 const onRotateEnd = (prize) => {
-  selectedPrize.value = prize;
-  showpopup.value = true; // Popup anzeigen
+  selectedPrize.value = prize; // Set the won prize
+  showpopup.value = true; // Show the popup
 };
 
 const closePopup = () => {
-  showpopup.value = false; // Popup schließen
-  selectedPrize.value = null;
+  showpopup.value = false; // Hide the popup
+  selectedPrize.value = null; // Clear the selected prize
 };
 
-// Dynamische Klassen für Popup-Größen basierend auf Bildschirmbreite
+// Dynamically computed class for popup size based on screen width
 const popupClass = computed(() => {
   const width = window.innerWidth;
   if (width < 600) return "popup-small";
@@ -163,16 +174,15 @@ const popupClass = computed(() => {
   text-align: center;
   width: 90%;
   max-width: 400px;
-  max-height: 80%; /* Reduziert die Höhe dynamisch */
-  overflow-y: auto; /* Ermöglicht vertikales Scrollen */
-  overflow-x: hidden;
+  max-height: 80%;
+  overflow-y: auto;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .popup-small {
-  width: 85%; /* Reduzierte Breite für kleine Bildschirme */
-  max-height: 70%; /* Noch kleinere Höhe */
-  font-size: 14px; /* Kleinere Schriftgröße */
+  width: 85%;
+  max-height: 70%;
+  font-size: 14px;
 }
 
 .popup-medium {
