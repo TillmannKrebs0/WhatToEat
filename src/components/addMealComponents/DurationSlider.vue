@@ -1,6 +1,6 @@
 <template>
   <q-slider
-    v-model="time"
+    v-model="state.time"
     color=positive
     markers
     snap
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { reactive, watch } from "vue";
 
 const props = defineProps({
   modelValue: {
@@ -23,16 +23,18 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:model-value"]);
 
+const state = reactive({
+  time: props.modelValue,
+});
+
 const emitTime = (newValue) => {
   emit("update:model-value", newValue);
 };
 
-const time = ref(props.modelValue);
-
 watch(
   () => props.modelValue,
   (newValue) => {
-    time.value = newValue;
+    state.time = newValue;
   }
 );
 </script>

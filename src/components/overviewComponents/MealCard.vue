@@ -3,7 +3,7 @@
     <div class="header">
       <!-- Favoriten-Icon -->
       <q-icon>
-        <template v-if="isFavorite">
+        <template v-if="state.isFavorite">
           <q-icon name="star" class="favorite-icon fav-selected" @click="toggleFavorite" />
         </template>
         <template v-else>
@@ -12,7 +12,7 @@
       </q-icon>
       
       <!-- Titel des Gerichts -->
-      <h3 @click="toggleDetails" class="meal-title">{{ editedMeal.title }}</h3>
+      <h3 @click="toggleDetails" class="meal-title">{{ state.editedMeal.title }}</h3>
 
       <!-- Editieren- und Löschen-Icons -->
       <q-icon
@@ -28,17 +28,17 @@
     </div>
 
     <!-- Detail-Ansicht -->
-    <div v-if="isExpanded" class="meal-details">
-      <p v-if="editedMeal.preparationTime"><strong>Dauer:</strong> {{ editedMeal.preparationTime }} min.</p>
-      <p v-if="editedMeal.ingredients.length > 0"><strong>Zutaten:</strong></p>
+    <div v-if="state.isExpanded" class="meal-details">
+      <p v-if="state.editedMeal.preparationTime"><strong>Dauer:</strong> {{ state.editedMeal.preparationTime }} min.</p>
+      <p v-if="state.editedMeal.ingredients.length > 0"><strong>Zutaten:</strong></p>
       <ul>
-        <li v-for="ingredient in editedMeal.ingredients" :key="ingredient">{{ ingredient }}</li>
+        <li v-for="ingredient in state.editedMeal.ingredients" :key="ingredient">{{ ingredient }}</li>
       </ul>
-      <p v-if="editedMeal.categories.length > 0"><strong>Kategorien:</strong> {{ editedMeal.categories.join(', ') }}</p>
+      <p v-if="state.editedMeal.categories.length > 0"><strong>Kategorien:</strong> {{ state.editedMeal.categories.join(', ') }}</p>
     </div>
 
     <!-- Popup zum Bearbeiten der Mahlzeit -->
-    <q-dialog v-model="editPopupVisible" class="dialog">
+    <q-dialog v-model="state.editPopupVisible" class="dialog">
       <q-card :style="dialogStyle">
         <q-card-section>
           <div class="text-h5">Mahlzeit bearbeiten</div>
@@ -46,25 +46,25 @@
 
         <q-card-section>
           <q-input
-            v-model="editedMeal.title"
+            v-model="state.editedMeal.title"
             label="Titel"
             autofocus
           />
           
           <CategorySelection 
-            v-model="editedMeal.categories" 
+            v-model="state.editedMeal.categories" 
             label="Kategorien"
             :categories="categories" 
           />
 
           <div class="row">
             <p class="label">Zubereitungszeit:</p>
-            <p v-if="editedMeal.preparationTime > 0">{{ editedMeal.preparationTime }} Minuten</p>
+            <p v-if="state.editedMeal.preparationTime > 0">{{ state.editedMeal.preparationTime }} Minuten</p>
             <p v-else>-</p>
           </div>
 
           <q-slider
-            v-model="editedMeal.preparationTime"
+            v-model="state.editedMeal.preparationTime"
             color="green"
             label="Zubereitungszeit"
             markers
@@ -76,7 +76,7 @@
           />
 
           <IngredientSelection 
-            v-model="editedMeal.ingredients"
+            v-model="state.editedMeal.ingredients"
           />
         </q-card-section>
 
@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { reactive, computed, watch } from 'vue';
 import { Preferences } from "@capacitor/preferences";
 import { QDialog, QCard, QCardSection, QCardActions, QIcon, QBtn, QInput, QSlider } from 'quasar';
 import CategorySelection from '../addMealComponents/CategorySelection.vue';
@@ -106,11 +106,12 @@ const props = defineProps({
 
 const emit = defineEmits(['removeMeal', 'updateMeal']);
 
-const isExpanded = ref(false);
-const isFavorite = ref(props.meal.categories.includes('Favoriten'));
-const editPopupVisible = ref(false);
-
-let editedMeal = ref(deepClone(props.meal));
+const state = reactive({
+  isExpanded: false,
+  isFavorite: props.meal.categories.includes('Favoriten'),
+  editPopupVisible: false,
+  editedMeal: deepClone(props.meal)
+});
 
 const dialogStyle = computed(() => {
   const isMobile = window.innerWidth <= 600;
@@ -124,33 +125,33 @@ const dialogStyle = computed(() => {
 watch(
   () => props.meal,
   (newMeal) => {
-    if (!editPopupVisible.value) {
-      editedMeal.value = deepClone(newMeal);
+    if (!state.editPopupVisible) {
+      state.editedMeal = deepClone(newMeal);
     }
   },
   { immediate: true }
 );
 
 const toggleFavorite = async () => {
-  isFavorite.value = !isFavorite.value;
+  state.isFavorite = !state.isFavorite;
 
-  if (isFavorite.value) {
-    if (!editedMeal.value.categories.includes('Favoriten')) {
-      editedMeal.value.categories.push('Favoriten');
+  if (state.isFavorite) {
+    if (!state.editedMeal.categories.includes('Favoriten')) {
+      state.editedMeal.categories.push('Favoriten');
     }
   } else {
-    const index = editedMeal.value.categories.indexOf('Favoriten');
+    const index = state.editedMeal.categories.indexOf('Favoriten');
     if (index !== -1) {
-      editedMeal.value.categories.splice(index, 1);
+      state.editedMeal.categories.splice(index, 1);
     }
   }
 
   const { value } = await Preferences.get({ key: "meals" });
   const mealsList = value ? JSON.parse(value) : [];
 
-  const mealIndex = mealsList.findIndex(meal => meal.id === editedMeal.value.id);
+  const mealIndex = mealsList.findIndex(meal => meal.id === state.editedMeal.id);
   if (mealIndex !== -1) {
-    mealsList[mealIndex] = { ...editedMeal.value };
+    mealsList[mealIndex] = { ...state.editedMeal };
   }
 
   await Preferences.set({
@@ -158,11 +159,11 @@ const toggleFavorite = async () => {
     value: JSON.stringify(mealsList),
   });
 
-  console.log("Meal updated:", editedMeal.value);
+  console.log("Meal updated:", state.editedMeal);
 };
 
 const toggleDetails = () => {
-  isExpanded.value = !isExpanded.value;
+  state.isExpanded = !state.isExpanded;
 };
 
 const removeMeal = () => {
@@ -170,21 +171,21 @@ const removeMeal = () => {
 };
 
 const openEditPopup = () => {
-  editedMeal.value = deepClone(props.meal);
-  editPopupVisible.value = true;
+  state.editedMeal = deepClone(props.meal);
+  state.editPopupVisible = true;
 };
 
 const closeEditPopup = () => {
-  editPopupVisible.value = false;
+  state.editPopupVisible = false;
 };
 
 const saveChanges = () => {
-  emit('updateMeal', deepClone(editedMeal.value));
+  emit('updateMeal', deepClone(state.editedMeal));
   closeEditPopup();
 };
 
 const cancelChanges = () => {
-  editedMeal.value = deepClone(props.meal);
+  state.editedMeal = deepClone(props.meal);
   closeEditPopup();
 };
 </script>
