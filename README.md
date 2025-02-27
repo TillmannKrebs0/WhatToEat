@@ -11,9 +11,10 @@ Save your favorite meals and let the app help you decide what to eat when you're
 * **Edit & Favorite** – Modify meals and mark your top picks with a star.
 * **Random Meal Selection** – Get meal suggestions based on filters like time and category.
 
-## Screenshots
+## Screenshots  
+
 | Feature            | Screenshot |
 |--------------------|------------|
-| **Add Meal**       | ![Add Meal](images/add_meal.jpg) |
-| **Meal Overview**  | ![Meal Overview](images/meal_overview.jpg) |
-| **Random Selection** | ![Random Selection](images/random_selection.jpg) |
+| **Add Meal**       | <img src="images/add_meal.jpg" width="300"> |
+| **Meal Overview**  | <img src="images/meal_overview.jpg" width="300"> |
+| **Random Selection** | <img src="images/random_selection.jpg" width="300"> |
