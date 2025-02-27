@@ -1,42 +1,19 @@
-# WhatToEat (whattoeatapp)
+# WhatToEat
+A mobile app to help you decide what's on your plate today!
 
-A mobile app, that helps you decide whats on the plate today!
+## About WhatToEat
+WhatToEat is a Vue application built with Quasar and Capacitor, designed as a mobile app.
+Save your favorite meals and let the app help you decide what to eat when you're unsure!
 
-## Install the dependencies
-```bash
-yarn
-# or
-npm install
-```
+## Features
+* **Add & Manage Meals** – Store your favorite meals and keep track of them.
+* **Meal Overview** – View all saved meals in a structured list.
+* **Edit & Favorite** – Modify meals and mark your top picks with a star.
+* **Random Meal Selection** – Get meal suggestions based on filters like time and category.
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
-
-### Doployment on Mobile
-1. Build the Project
-``` bash
-npm run build
-```
-
-2. add android dependencies (first time only)
-```bash
-npx cap add android
-```
-
-3. Update android files
-```bash
-npx cap sync
-```  
-
-4. Open the android folder in Android Studio and run on emulator or connect a device
+## Screenshots
+| Feature            | Screenshot |
+|--------------------|------------|
+| **Add Meal**       | ![Add Meal](images/add_meal.jpg) |
+| **Meal Overview**  | ![Meal Overview](images/meal_overview.jpg) |
+| **Random Selection** | ![Random Selection](images/random_selection.jpg) |
